@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScriptWise.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg0:#f0f2f5;--bg1:#ffffff;--bg2:#f8f9fc;--bg3:#f0f2f5;--bg4:#e5e7eb;--bdr:rgba(0,0,0,0.08);--bdr2:rgba(0,0,0,0.12);--teal:#00a396;--teal2:#00c4b4;--amber:#d97706;--amber2:#b45309;--red:#dc2626;--green:#16a34a;--purple:#7c3aed;--t1:#111318;--t2:#374151;--t3:#9ca3b0}
+html,body{height:100%;background:var(--bg0);color:var(--t1);font-family:"DM Sans",sans-serif;overflow:hidden;}
+
+/* LOGIN */
+#ls{position:fixed;inset:0;background:var(--bg0);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000}
+.lb{width:100%;max-width:400px;padding:0 24px}
+.ll{text-align:center;margin-bottom:32px}
+.llm{display:inline-flex;align-items:center;gap:10px;margin-bottom:8px}
+.li{width:42px;height:42px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:#fff}
+.ll h1{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;color:var(--t1)}
+.ll h1 span{color:var(--teal)}
+.ltag{font-size:12px;color:var(--t3);margin-top:4px}
+.lc{background:var(--bg2);border:1px solid var(--bdr2);border-radius:14px;padding:28px;margin-bottom:16px}
+.lc h2{font-family:"Syne",sans-serif;font-size:16px;font-weight:700;margin-bottom:4px}
+.lc p{font-size:12px;color:var(--t3);margin-bottom:20px}
+.lfl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:6px;display:block}
+.lfi{width:100%;background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--t1);outline:none;margin-bottom:14px;font-family:"DM Sans",sans-serif}
+.lfi:focus{border-color:var(--teal)}
+.lbtn{width:100%;padding:12px;background:var(--teal);color:#000;border:none;border-radius:8px;font-family:"Syne",sans-serif;font-size:13px;font-weight:800;cursor:pointer}
+.lbtn:disabled{opacity:0.5}
+.lerr{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:#fca5a5;margin-top:12px;display:none;text-align:center}
+.lerr.show{display:block}
+.lfoot{text-align:center;font-size:11px;color:var(--t3)}
+.lfoot span{color:var(--teal)}
+.pw{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--t3);font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+.pw span{color:var(--teal)}
+
+/* APP */
+#app{display:none;grid-template-rows:50px 1fr;height:100vh}
+#app.show{display:grid}
+.bar{background:var(--bg1);border-bottom:1px solid var(--bdr);box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;padding:0 16px;gap:10px}
+.logo{display:flex;align-items:center;gap:8px}
+.lsm{width:26px;height:26px;background:var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:11px;font-weight:800;color:#fff}
+.ltxt{font-family:"Syne",sans-serif;font-size:15px;font-weight:800}
+.ltxt span{color:var(--teal)}
+.pbadge{background:var(--bg3);border:1px solid var(--bdr2);border-radius:20px;padding:3px 10px;font-size:10px;color:var(--t2);font-family:"IBM Plex Mono",monospace}
+.pill{font-size:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1px solid var(--red);color:var(--red);display:flex;align-items:center;gap:4px}
+.pill::before{content:"";width:5px;height:5px;background:var(--red);border-radius:50%;animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.br{margin-left:auto;display:flex;align-items:center;gap:8px}
+.clk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--t3)}
+.tbtn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;border:1px solid var(--bdr2);background:var(--bg3);color:var(--t2);font-size:10px;font-family:"IBM Plex Mono",monospace;cursor:pointer}
+.tbtn:hover{border-color:var(--teal);color:var(--teal)}
+.tbtn.on{border-color:var(--red);color:var(--red);background:rgba(239,68,68,0.08)}
+.sbtn{font-size:10px;color:var(--t2);background:var(--bg3);border:1px solid var(--bdr2);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:"IBM Plex Mono",monospace}
+.sbtn:hover{border-color:var(--teal);color:var(--teal)}
+.obtn{font-size:10px;color:var(--t3);background:none;border:1px solid var(--bdr);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:"IBM Plex Mono",monospace}
+.obtn:hover{color:var(--red);border-color:var(--red)}
+.body{display:grid;grid-template-columns:1fr 360px;overflow:hidden}
+.left{display:grid;grid-template-rows:1fr auto;overflow:hidden;border-right:1px solid var(--bdr)}
+.ph{padding:9px 14px;border-bottom:1px solid var(--bdr);font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);display:flex;align-items:center;justify-content:space-between}
+.ltg{font-size:9px;font-family:"IBM Plex Mono",monospace;color:var(--t3)}
+.ltg.on{color:var(--green)}
+.ts{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.ts::-webkit-scrollbar{width:2px}.ts::-webkit-scrollbar-thumb{background:var(--bg4)}
+.msg{display:flex;gap:7px;animation:fu .25s ease}
+@keyframes fu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.ml{font-family:"IBM Plex Mono",monospace;font-size:8px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;min-width:36px;margin-top:2px;padding:2px 4px;border-radius:3px;text-align:center;flex-shrink:0}
+.mt{font-size:12px;line-height:1.6;flex:1;padding:7px 10px;border-radius:0 7px 7px 7px}
+.msg.patient .ml{color:var(--teal);background:rgba(0,196,180,0.1)}.msg.patient .mt{background:var(--bg2);border:1px solid var(--bdr)}
+.msg.rep .ml{color:var(--purple);background:rgba(167,139,250,0.1)}.msg.rep .mt{background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15)}
+.msg.sys .ml{color:var(--amber);background:rgba(245,158,11,0.1)}.msg.sys .mt{background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.12);font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--amber2)}
+.typ{display:none;align-items:center;gap:6px;padding:6px 10px;background:var(--bg2);border:1px solid var(--bdr);border-radius:7px;width:fit-content;margin-left:45px}
+.typ.show{display:flex}
+.td{width:4px;height:4px;background:var(--teal);border-radius:50%;animation:bounce 1s ease infinite}
+.td:nth-child(2){animation-delay:.15s}.td:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}}
+.itm{padding:6px 14px;border-top:1px solid var(--bdr);font-size:11px;color:var(--t3);font-style:italic;display:none;min-height:28px}
+.itm.show{display:block}
+.bot{border-top:1px solid var(--bdr)}
+.chips{padding:7px 12px;background:var(--bg1);border-bottom:1px solid var(--bdr)}
+.cl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.cr{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:10px;font-family:"IBM Plex Mono",monospace;padding:3px 9px;border-radius:20px;border:1px solid var(--bdr2);background:var(--bg3);color:var(--t2);cursor:pointer}
+.chip:hover,.chip.on{border-color:var(--teal);color:var(--teal);background:rgba(0,196,180,0.08)}
+.ibar{padding:10px 12px;background:var(--bg1);display:flex;gap:6px}
+.ifield{flex:1;background:var(--bg3);border:1px solid var(--bdr2);border-radius:7px;padding:7px 11px;font-size:12px;color:var(--t1);font-family:"DM Sans",sans-serif;outline:none}
+.ifield:focus{border-color:var(--teal)}
+.ifield::placeholder{color:var(--t3)}
+.btn{padding:7px 14px;border-radius:7px;border:none;font-family:"Syne",sans-serif;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+.bp{background:var(--teal);color:#fff}
+.bg2{background:var(--bg3);color:var(--t2);border:1px solid var(--bdr2)}
+.right{display:flex;flex-direction:column;overflow:hidden}
+.qbar{padding:11px 14px;border-bottom:1px solid var(--bdr);background:var(--bg1)}
+.qrow{display:flex;align-items:center;gap:10px;margin-bottom:5px}
+.qs{font-family:"Syne",sans-serif;font-size:26px;font-weight:800;line-height:1}
+.qs.hi{color:var(--green)}.qs.mid{color:var(--amber)}.qs.lo{color:var(--red)}
+.qmeta{flex:1}.ql{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3)}.qd{font-size:11px;color:var(--t2);margin-top:1px}
+.qtr{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.qf{height:100%;border-radius:2px;transition:width .7s ease}
+.fhi{background:var(--green)}.fmid{background:var(--amber)}.flo{background:var(--red)}
+.ms{display:flex;gap:10px;margin-top:5px}
+.ms span{font-size:9px;color:var(--t3);font-family:"IBM Plex Mono",monospace}
+.ms strong{color:var(--t1)}
+.sugg{flex:1;overflow-y:auto}.sugg::-webkit-scrollbar{width:2px}.sugg::-webkit-scrollbar-thumb{background:var(--bg4)}
+.sh2{padding:9px 12px;border-bottom:1px solid var(--bdr);background:var(--bg1);font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)}
+.si{padding:10px;display:flex;flex-direction:column;gap:7px}
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.card:hover{border-color:var(--teal)}
+.card.used{opacity:.4;pointer-events:none}
+.ch2{padding:7px 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--bdr)}
+.ct{font-family:"IBM Plex Mono",monospace;font-size:8px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;padding:2px 6px;border-radius:10px}
+.te{background:rgba(167,139,250,.15);color:var(--purple)}.tp{background:rgba(0,196,180,.12);color:var(--teal)}.tu{background:rgba(245,158,11,.12);color:var(--amber2)}
+.ctit{font-size:10px;font-weight:600;color:var(--t2);flex:1}
+.cpy{font-size:8px;color:var(--t3);background:var(--bg3);border:1px solid var(--bdr);padding:2px 6px;border-radius:4px;cursor:pointer;font-family:"IBM Plex Mono",monospace}
+.cpy:hover{color:var(--teal);border-color:var(--teal)}
+.cb2{padding:9px 10px;font-size:11.5px;line-height:1.6;color:var(--t1)}
+.ck2{font-size:9px;color:var(--teal);font-family:"IBM Plex Mono",monospace;margin-top:6px;padding-top:6px;border-top:1px solid var(--bdr)}
+.cf2{font-size:9px;color:var(--amber);font-family:"IBM Plex Mono",monospace;margin-top:3px}
+.empty{padding:24px 14px;text-align:center;font-size:11px;color:var(--t3);line-height:1.6}
+.np{border-top:1px solid var(--bdr);background:var(--bg1)}
+.nc{padding:7px 12px 10px;font-size:10px;font-family:"IBM Plex Mono",monospace;color:var(--t2);line-height:1.7;height:110px;overflow-y:auto}
+.nc::-webkit-scrollbar{width:2px}.nl{display:flex;gap:6px}
+
+/* MODALS */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:500;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.mbox{background:var(--bg2);border:1px solid var(--bdr2);border-radius:12px;padding:24px;width:420px;max-width:92vw}
+.mtitle{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;margin-bottom:4px}
+.msub{font-size:11px;color:var(--t3);margin-bottom:18px;line-height:1.5}
+.mlbl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:6px;display:block}
+.minp{width:100%;background:var(--bg3);border:1px solid var(--bdr2);border-radius:7px;padding:9px 12px;font-size:12px;color:var(--t1);font-family:"IBM Plex Mono",monospace;outline:none;margin-bottom:6px}
+.minp:focus{border-color:var(--teal)}
+.mhint{font-size:10px;color:var(--t3);margin-bottom:14px;line-height:1.5}
+.mrow{display:flex;gap:8px;margin-top:4px}
+
+/* REPORTS */
+.rbox{background:var(--bg2);border:1px solid var(--bdr2);border-radius:12px;padding:24px;width:740px;max-width:95vw;max-height:88vh;overflow-y:auto}
+.rbox::-webkit-scrollbar{width:3px}.rbox::-webkit-scrollbar-thumb{background:var(--bg4)}
+.rstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.rstat{background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;padding:14px}
+.rsval{font-family:"Syne",sans-serif;font-size:26px;font-weight:800;line-height:1;margin-bottom:3px}
+.rslbl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3)}
+.rssub{font-size:10px;color:var(--t2);margin-top:2px;font-family:"IBM Plex Mono",monospace}
+.rcrd{background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;padding:14px}
+.rctitle{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.rcharts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.brow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.blbl{font-size:10px;font-family:"IBM Plex Mono",monospace;color:var(--t2);min-width:130px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.btrk{flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.bfill{height:100%;border-radius:3px}
+.bcnt{font-size:10px;font-family:"IBM Plex Mono",monospace;color:var(--t3);min-width:20px;text-align:right}
+.daywrap{display:flex;align-items:flex-end;gap:5px;height:80px}
+.daycol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.daybar{width:70%;border-radius:3px 3px 0 0;background:var(--teal);min-height:2px}
+.daylbl{font-size:9px;font-family:"IBM Plex Mono",monospace;color:var(--t3)}
+.dayval{font-size:9px;font-family:"IBM Plex Mono",monospace;color:var(--t2)}
+.crow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:11px}
+.crow:last-child{border-bottom:none}
+.ctime{font-family:"IBM Plex Mono",monospace;font-size:9px;color:var(--t3);min-width:72px}
+.ctype{font-family:"IBM Plex Mono",monospace;font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(0,196,180,0.1);color:var(--teal);white-space:nowrap}
+.cnote{font-size:11px;color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cscore{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:500;min-width:36px;text-align:right}
+
+/* SMS */
+.sms-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:600;align-items:center;justify-content:center}
+.sms-ov.show{display:flex}
+.sms-bx{background:var(--bg2);border:1px solid var(--bdr2);border-radius:14px;padding:24px;width:480px;max-width:92vw}
+.sms-prev{background:var(--bg3);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:var(--t1);margin-bottom:10px;white-space:pre-wrap;min-height:90px}
+.sms-ni{width:100%;background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--t1);outline:none;margin-bottom:10px;font-family:"DM Sans",sans-serif}
+.sms-ni:focus{border-color:var(--green)}
+.stag{font-size:9px;font-family:"IBM Plex Mono",monospace;padding:2px 8px;border-radius:10px;background:rgba(0,196,180,0.1);color:var(--teal);margin-right:4px}
+/* TRAINING */
+.tr-ov{display:none;position:fixed;inset:0;background:var(--bg0);z-index:700;flex-direction:column}
+.tr-ov.show{display:flex}
+.tr-tb{height:50px;background:var(--bg1);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.tr-bd{flex:1;display:flex;overflow:hidden}
+.tr-sb{width:260px;border-right:1px solid var(--bdr);background:var(--bg1);padding:14px;overflow-y:auto;flex-shrink:0}
+.tr-mn{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tr-cv{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.tr-cv::-webkit-scrollbar{width:2px}.tr-cv::-webkit-scrollbar-thumb{background:var(--bg4)}
+.tr-ft{padding:14px 20px;border-top:1px solid var(--bdr);background:var(--bg1);flex-shrink:0;text-align:center}
+.tr-st{font-size:11px;font-family:"IBM Plex Mono",monospace;color:var(--t3);margin-bottom:10px;min-height:16px}
+.tr-st.go{color:var(--green)}
+.tr-st.tk{color:var(--teal)}
+.tr-sc{background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:10px 12px;margin-bottom:6px;cursor:pointer}
+.tr-sc:hover{border-color:var(--teal)}
+.tr-sc.sel{border-color:var(--teal);background:rgba(0,196,180,0.08)}
+.tr-sn{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.tr-sd{font-size:10px;color:var(--t3);font-family:"IBM Plex Mono",monospace}
+.tr-msg{display:flex;gap:8px;animation:fu .2s ease}
+.tr-av{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:"IBM Plex Mono",monospace}
+.tr-msg.pr .tr-av{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
+.tr-msg.rp .tr-av{background:rgba(167,139,250,0.15);color:var(--purple);border:1px solid rgba(167,139,250,0.3)}
+.tr-msg.sy .tr-av{background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3)}
+.tr-bu{flex:1;padding:8px 12px;border-radius:0 8px 8px 8px;font-size:12px;line-height:1.6}
+.tr-msg.pr .tr-bu{background:var(--bg2);border:1px solid var(--bdr)}
+.tr-msg.rp .tr-bu{background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15)}
+.tr-msg.sy .tr-bu{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.12);font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--amber2)}
+.tr-mic{padding:11px 24px;border-radius:50px;border:2px solid var(--teal);background:rgba(0,196,180,0.1);color:var(--teal);font-family:"Syne",sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.tr-mic.rec{border-color:var(--red);background:rgba(239,68,68,0.15);color:var(--red)}
+.tr-mic:disabled{opacity:.4;cursor:not-allowed}
+.tr-eb{padding:11px 16px;border-radius:50px;border:1px solid var(--bdr2);background:var(--bg3);color:var(--t2);font-family:"Syne",sans-serif;font-size:11px;font-weight:700;cursor:pointer;margin-left:8px}
+.tr-eb:hover{border-color:var(--red);color:var(--red)}
+/* DEBRIEF */
+.db-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:800;align-items:center;justify-content:center}
+.db-ov.show{display:flex}
+.db-bx{background:var(--bg2);border:1px solid var(--bdr2);border-radius:14px;padding:26px;width:540px;max-width:92vw;max-height:88vh;overflow-y:auto}
+.db-bx::-webkit-scrollbar{width:3px}.db-bx::-webkit-scrollbar-thumb{background:var(--bg4)}
+.db-rng{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-family:"Syne",sans-serif;font-size:26px;font-weight:800;border:4px solid}
+.db-cat{background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:11px 13px;margin-bottom:7px}
+.db-cr{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.db-cn{font-size:11px;font-weight:600;color:var(--t2)}
+.db-cs{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500}
+.db-tr{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.db-fl{height:100%;border-radius:2px}
+.db-tp{font-size:10.5px;color:var(--t3);margin-top:5px;line-height:1.5;font-style:italic}
+
+.wf-ov{display:none;position:fixed;inset:0;background:var(--bg0);z-index:700;flex-direction:column}
+.wf-ov.show{display:flex}
+.wf-tb{height:50px;background:var(--bg1);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.wf-body{flex:1;display:flex;overflow:hidden}
+.wf-left{width:200px;border-right:1px solid var(--bdr);background:var(--bg1);padding:12px;flex-shrink:0;display:flex;flex-direction:column;gap:5px}
+.wf-main{flex:1;overflow-y:auto;padding:18px}
+.wf-main::-webkit-scrollbar{width:2px}.wf-main::-webkit-scrollbar-thumb{background:var(--bg4)}
+.wf-tab{padding:9px 11px;border-radius:7px;border:1px solid var(--bdr2);background:var(--bg3);cursor:pointer}
+.wf-tab:hover,.wf-tab.sel{border-color:var(--teal);background:rgba(0,196,180,0.08)}
+.wf-tab-name{font-size:11px;font-weight:600;color:var(--t1);margin-bottom:1px}
+.wf-tab-desc{font-size:9px;color:var(--t3);font-family:"IBM Plex Mono",monospace}
+.wf-sec{display:none}.wf-sec.show{display:block}
+.wf-pcard{background:var(--bg2);border:1px solid var(--bdr2);border-radius:10px;padding:14px;margin-bottom:16px}
+.wf-ptitle{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wf-field{display:flex;flex-direction:column;gap:3px}
+.wf-field.full{grid-column:1/-1}
+.wf-lbl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3)}
+.wf-inp{background:var(--bg3);border:1px solid var(--bdr2);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t1);font-family:"DM Sans",sans-serif;outline:none;width:100%}
+.wf-inp:focus{border-color:var(--teal)}
+.wf-sel{background:var(--bg3);border:1px solid var(--bdr2);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none;width:100%;cursor:pointer}
+.wf-seq-title{font-family:"Syne",sans-serif;font-size:14px;font-weight:700;color:var(--t1);margin-bottom:12px}
+.wf-note{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:7px;padding:9px 12px;font-size:10px;color:var(--amber2);font-family:"IBM Plex Mono",monospace;margin-bottom:12px;line-height:1.6}
+.wf-card{background:var(--bg2);border:1px solid var(--bdr2);border-radius:9px;overflow:hidden;margin-bottom:9px}
+.wf-card-hd{padding:9px 12px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:8px}
+.wf-day{font-family:"IBM Plex Mono",monospace;font-size:9px;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.wf-day.teal{background:rgba(0,196,180,0.1);color:var(--teal)}
+.wf-day.amber{background:rgba(245,158,11,0.1);color:var(--amber2)}
+.wf-day.red{background:rgba(239,68,68,0.1);color:var(--red)}
+.wf-timing{font-size:11px;font-weight:600;color:var(--t2);flex:1}
+.wf-body-txt{padding:11px 13px;font-size:11.5px;line-height:1.75;color:var(--t1);white-space:pre-wrap;border-bottom:1px solid var(--bdr)}
+.wf-card-ft{padding:7px 13px;display:flex;align-items:center;justify-content:space-between}
+.wf-wa{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;font-size:10px;font-family:"IBM Plex Mono",monospace;cursor:pointer;text-decoration:none}
+.wf-wa:hover{background:rgba(37,211,102,0.2)}
+.wf-cpy{font-size:9px;color:var(--t3);background:var(--bg3);border:1px solid var(--bdr);padding:3px 8px;border-radius:4px;cursor:pointer;font-family:"IBM Plex Mono",monospace}
+.wf-cpy:hover{color:var(--teal);border-color:var(--teal)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="ls">
+  <div class="lb">
+    <div class="ll">
+      <div class="llm"><div class="li" style="font-size:13px">SW</div><h1>ScriptWise<span>.ai</span></h1></div>
+      <div class="ltag">AI-Powered Sales Intelligence · Innova Marketing</div>
+    </div>
+    <div class="lc">
+      <h2>Welcome back</h2>
+      <p>Sign in to access your sales dashboard</p>
+      <label class="lfl">Username</label>
+      <input class="lfi" id="lu" type="text" placeholder="Your username" autocomplete="off"/>
+      <label class="lfl">Password</label>
+      <input class="lfi" id="lp" type="password" placeholder="Your password"/>
+      <button class="lbtn" id="lbtn" onclick="doLogin()">Sign In</button>
+      <div class="lerr" id="lerr">Incorrect username or password</div>
+    </div>
+    <div class="lfoot">Need access? Contact <span>Innova Marketing</span></div>
+  </div>
+  <div class="pw">Powered by <span>ScriptWise.ai</span> · Innova Marketing</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="bar">
+    <div class="logo"><div class="lsm" style="font-size:9px">SW</div><div class="ltxt">ScriptWise<span>.ai</span></div></div>
+    <div class="pbadge" id="pbadge">Practice</div>
+    <div class="pill">Live</div>
+    <div class="br">
+      <button class="tbtn" id="micbtn" onclick="toggleMic()"><span id="mlbl">🎤 Start Listening</span></button>
+      <div class="clk" id="clk">00:00</div>
+      <button id="end-call-btn" onclick="endCall()" style="display:none;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1px solid rgba(239,68,68,0.5);background:rgba(239,68,68,0.1);color:var(--red);font-size:10px;font-family:'IBM Plex Mono',monospace;cursor:pointer">📵 End Call &amp; SMS</button>
+      <button class="sbtn" onclick="openWorkflows()">⚡ Workflows</button>
+      <button class="sbtn" onclick="openTraining()">🎓 Training</button>
+      <button class="sbtn" onclick="openRpt()">📊 Reports</button>
+      <button class="sbtn" onclick="openCfg()">⚙ Settings</button>
+      <button class="obtn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </header>
+  <div class="body">
+    <div class="left">
+      <div style="display:flex;flex-direction:column;overflow:hidden;flex:1">
+        <div class="ph"><span>Live Transcript</span><span class="ltg" id="ltg">● Mic off</span></div>
+        <div class="ts" id="ts">
+          <div class="msg sys"><div class="ml">SYS</div><div class="mt">Session ready. Click Start Listening or use the objection chips below.</div></div>
+        </div>
+        <div class="typ" id="typ"><div class="td"></div><div class="td"></div><div class="td"></div><span style="font-size:10px;color:var(--t3);font-family:'IBM Plex Mono',monospace;margin-left:4px">Analysing...</span></div>
+        <div class="itm" id="itm"></div>
+      </div>
+      <div class="bot">
+        <div class="chips"><div class="cl">Quick objections</div><div class="cr" id="cr"></div></div>
+        <div class="ibar">
+          <input class="ifield" id="inp" placeholder="Type what the prospect says and press Enter..." autocomplete="off"/>
+          <button class="btn bp" onclick="go()">Analyse</button>
+          <button class="btn bg2" onclick="rst()">Reset</button>
+        </div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="qbar">
+        <div class="qrow">
+          <div class="qs mid" id="qs">--</div>
+          <div class="qmeta"><div class="ql">Conversion Probability</div><div class="qd" id="qd">Awaiting first interaction</div></div>
+        </div>
+        <div class="qtr"><div class="qf fmid" id="qf" style="width:0%"></div></div>
+        <div class="ms"><span>Objections: <strong id="oc">0</strong></span><span>Handled: <strong id="hc">0</strong></span><span>Quality: <strong id="qt">--</strong></span></div>
+      </div>
+      <div class="sugg">
+        <div class="sh2">AI Response Suggestions</div>
+        <div class="si" id="si"><div class="empty">Suggestions appear instantly when a prospect raises an objection. Use the chips below to get started.</div></div>
+      </div>
+      <div class="np"><div class="sh2">Auto Call Notes</div><div class="nc" id="nc"><span style="color:var(--t3)">Notes auto-generate as the call progresses...</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="modal" id="cfg">
+  <div class="mbox">
+    <div class="mtitle">Settings</div>
+    <div class="msub">Enter your Deepgram API key to activate live mic transcription.</div>
+    <label class="mlbl">Deepgram API Key</label>
+    <input class="minp" id="dgk" type="password" placeholder="Your Deepgram key..."/>
+    <div class="mhint">Get your key at deepgram.com → Dashboard → API Keys</div>
+    <div class="mrow">
+      <button class="btn bp" onclick="saveCfg()" style="flex:1">Save</button>
+      <button class="btn bg2" onclick="closeCfg()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div class="modal" id="rpt">
+  <div class="rbox">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">Reports Dashboard</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px" id="rpt-sub"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="clearRpt()" style="font-size:9px;color:var(--red);background:none;border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:'IBM Plex Mono',monospace">Clear Data</button>
+        <button onclick="closeRpt()" class="btn bg2" style="font-size:10px">Close</button>
+      </div>
+    </div>
+    <div class="rstats" id="rstats"></div>
+    <div class="rcharts">
+      <div class="rcrd"><div class="rctitle">Objection Types</div><div id="robj"></div></div>
+      <div class="rcrd"><div class="rctitle">Calls This Week</div><div id="rdays"></div></div>
+    </div>
+    <div class="rcrd"><div class="rctitle">Recent Call Log</div><div id="rcalls" style="max-height:200px;overflow-y:auto"></div></div>
+  </div>
+</div>
+
+<script>
+// CLIENTS
+const CLIENTS = {
+  "demo":          { password: "dentai2024",  name: "Demo Practice" },
+  "synergydental": { password: "synergy2024", name: "Synergy Dental" }
+};
+
+// STATE
+let DG_KEY = "622b75a42e7eb2d7c066d04d6ddeb82a07e0c90a";
+let oc=0, hc=0, started=false, secs=0, notes=[];
+let micActive=false, dgSocket=null, mediaRecorder=null;
+let _cd=null, _ci=0;
+const TONES=[{k:"empathetic",cls:"te",lbl:"Empathetic"},{k:"practical",cls:"tp",lbl:"Practical"},{k:"urgency",cls:"tu",lbl:"Urgency"}];
+
+// CHIPS
+const CHIPS=[
+  {l:"Too expensive",   ex:"It's quite expensive, I wasn't expecting it to cost that much, I'm not sure I can afford it."},
+  {l:"Need to think",   ex:"I need to think about it and do more research before making any decisions."},
+  {l:"Talk to spouse",  ex:"I would need to talk to my husband first before committing to anything like this."},
+  {l:"Fear / anxiety",  ex:"I am honestly terrified of dental work. I have had really bad experiences before."},
+  {l:"Not ready yet",   ex:"I am just not ready to commit right now. Maybe in a few months."},
+  {l:"Insurance query", ex:"Does my insurance cover any of this? I am worried about out of pocket costs."},
+  {l:"Getting quotes",  ex:"I am going to get a few quotes from other practices first before I decide."},
+  {l:"Will it hurt?",   ex:"Will it be painful? I have heard implants are quite sore and take a long time to heal."},
+  {l:"Invisalign?",     ex:"I am interested in Invisalign but not sure if it will work for my teeth."}
+];
+
+// RESPONSE LIBRARY - SYNERGY DENTAL
+const LIB={
+  price:{
+    kw:["expensive","cost","afford","price","money","budget","pay","costly","much","pound"],
+    type:"Price Concern",urgency:"High",score:55,tag:"Warm",desc:"Price objection raised",note:"Price concern — introduce Tabeo and Snap finance options",
+    r:{
+      empathetic:{h:"Validate then reframe",s:"I completely understand — it is a significant investment. What I can tell you is that most of our patients say it is the best decision they ever made. We work with Tabeo and Snap Finance so you can spread the cost over up to 60 months. A single implant at £2,750 works out to under £50 a month on our longest plan — less than most people spend on takeaways.",k:"Under £50 a month reframes the cost completely",f:"What monthly figure would feel manageable for you?"},
+      practical:{h:"Break down the numbers",s:"Let me give you the exact figures. A single tooth implant is £2,750 all-inclusive — that covers scans, the Straumann implant, the crown, extractions and bone grafting if needed. No hidden fees. On our 60-month finance plan that is around £46 a month. Compare that to leaving a missing tooth untreated — bone loss, shifting teeth, further extractions — and the implant actually saves you money long term.",k:"All-inclusive pricing removes hidden fee fears",f:"Would our 60-month finance option work for your budget?"},
+      urgency:{h:"Spring sale is live now",s:"I hear you on the cost and the timing is actually perfect — we have a Spring Sale running right now with limited availability. Our finance through Tabeo means you can get started with very little upfront. I would hate for you to miss it. Shall I book your free consultation this week while slots are still available? You are under zero obligation.",k:"Current sale creates urgency without pressure",f:"Can I hold a free consultation slot for you this week before the offer ends?"}
+    }
+  },
+  think:{
+    kw:["think","research","sure","later","month","week","consider","not ready","maybe","time","decide","unsure"],
+    type:"Decision Delay",urgency:"Medium",score:45,tag:"Warm",desc:"Needs nurturing",note:"Prospect delaying — book free consultation as low commitment next step",
+    r:{
+      empathetic:{h:"Honour the hesitation",s:"Of course — this is a big decision and I would never want you to rush. Can I ask, is there a specific part you are unsure about? Sometimes just talking it through helps. We offer a completely free no-obligation consultation at any of our 17 clinics — you come in, meet the dentist, get a proper assessment and leave with all the facts. No pressure whatsoever.",k:"Free consultation removes all commitment risk",f:"What specifically would you want to think through before moving forward?"},
+      practical:{h:"Information first",s:"That makes total sense. What I would suggest is booking our free consultation — it takes about 20 minutes and you will come away with a full treatment plan and exact costings personalised to you. You are under absolutely no obligation to go ahead. Most patients say it just makes the decision much easier once they have had that face to face conversation.",k:"Reduce commitment to just a free consultation",f:"Would this week or next week work better for your free consultation?"},
+      urgency:{h:"Cost of waiting",s:"I completely respect that. I just want to mention that dental issues rarely stay the same — they tend to develop over time, and what is straightforward today can become more complex and more expensive further down the line. Even if you just book the free consultation now, you are not committing to anything at all.",k:"Inaction has a real cost — simple first step available",f:"If I kept a slot free for next week, would that give you enough time to think it over?"}
+    }
+  },
+  spouse:{
+    kw:["husband","wife","partner","spouse","other half","discuss","family","together","both"],
+    type:"Third Party Approval",urgency:"Medium",score:50,tag:"Warm",desc:"Needs partner buy-in",note:"Third party approval needed — offer joint free consultation",
+    r:{
+      empathetic:{h:"Involve them together",s:"That makes complete sense — big decisions are always better made together. Why do we not arrange for both of you to come in for a free consultation at your nearest Synergy clinic? Your partner can ask any questions, meet the dentist, see the practice, and you can both make the decision with everything in front of you. No pressure at all.",k:"Bring the decision maker into the room",f:"Would your partner be able to come in with you for a free consultation this week?"},
+      practical:{h:"Give them the facts",s:"Absolutely, I would encourage that. I can send you our full treatment guide and finance options — it covers exactly what is included in the price, how Tabeo Finance works, and our before and after results. That way you have both got everything you need to make a decision together. What is the best email to send that to?",k:"Provide evidence pack to influence the third party",f:"What email address can I send the full information pack to?"},
+      urgency:{h:"Book before slots fill",s:"Great idea. We have availability this week and next for joint consultations at your nearest clinic — completely free, no commitment. I would hate for you to miss our Spring Sale while waiting. Can I pencil something in for you both? You can always cancel if it does not suit.",k:"Create urgency around the joint slot and current offer",f:"Which of our 17 locations would be most convenient for you both?"}
+    }
+  },
+  fear:{
+    kw:["scared","terrified","anxious","nervous","afraid","phobia","hate","dread","fear","anxiety","bad experience","needle"],
+    type:"Dental Anxiety",urgency:"High",score:60,tag:"Hot",desc:"Anxiety — high emotion prospect",note:"Dental anxiety flagged — highlight sedation options and gentle team",
+    r:{
+      empathetic:{h:"Fully validate the fear",s:"I want you to know you are absolutely not alone. A huge number of our patients felt exactly the same way before coming to us, and it is one of the reasons we have put so much into creating a calm, gentle environment. Our dentists are incredibly patient with nervous patients — there is no rushing, no judgement, and you are completely in control at every stage.",k:"Normalise the fear and position Synergy as the solution",f:"What was it about your past experience that you found most difficult?"},
+      practical:{h:"Sedation and pain-free options",s:"The good news is dentistry has completely transformed. We use the latest pain-free techniques and for nervous patients we offer conscious sedation — you are relaxed and aware but completely comfortable throughout. We also have a dedicated nervous patient pathway at Synergy. Many of our patients are genuinely amazed by how different their experience was.",k:"Concrete options remove the abstract fear",f:"Have you heard about conscious sedation? Would it help if I explained exactly how it works?"},
+      urgency:{h:"Avoidance costs more",s:"I hear you and I really do understand. But avoiding dental treatment because of anxiety often means smaller issues become much bigger ones over time. Our team is specifically trained to work with nervous patients and we will go entirely at your pace. A free 20-minute no-treatment chat with the dentist might be the perfect first step — no drills, no needles, just a conversation.",k:"Avoidance has a real health cost — safe first step available",f:"Would a relaxed no-treatment introductory chat with the dentist help you feel more comfortable?"}
+    }
+  },
+  insurance:{
+    kw:["insurance","nhs","cover","covered","private","policy","claim","fund","finance"],
+    type:"Finance Query",urgency:"Medium",score:50,tag:"Warm",desc:"Finance clarity needed",note:"Finance query — explain Tabeo Snap and SynPlan options",
+    r:{
+      empathetic:{h:"Transparent pricing always",s:"Really great question. Treatments like implants and Invisalign are not covered by NHS, but Synergy has some of the most flexible finance options in the country. We work with Tabeo Finance and Snap Finance — you can spread payments over up to 60 months. We also have our own SynPlan monthly payment plan. We believe cost should never be a barrier to the smile you deserve.",k:"Own the finance conversation with specific provider names",f:"Do you have any private dental cover? I can help you check what it might contribute."},
+      practical:{h:"Finance breakdown",s:"Our single implant package is £2,750 all-inclusive — no hidden fees, everything covered. Through Tabeo Finance over 60 months that is around £46 a month. Invisalign starts from £2,000 for our Express package which is around £34 a month over 60 months. We also have Snap Finance for same-day approvals. Which treatment were you looking at?",k:"Specific monthly figures make finance feel real and accessible",f:"Would a 60-month plan work for you or would you prefer a shorter term?"},
+      urgency:{h:"Spring sale plus finance",s:"The timing is genuinely good — we have a Spring Sale running right now with limited slots. Combined with our finance options through Tabeo and Snap you could start treatment with very little upfront cost. I would hate for you to miss this. Shall I book your free consultation this week so we can go through the exact figures together?",k:"Sale plus flexible finance creates a compelling case to act",f:"Can I book your free consultation before the Spring Sale slots fill up?"}
+    }
+  },
+  quotes:{
+    kw:["quote","quotes","elsewhere","other","another","compare","shop around","different","cheaper","alternatives"],
+    type:"Shopping Around",urgency:"Medium",score:40,tag:"Warm",desc:"Comparing options",note:"Prospect shopping around — lead with Straumann and 20000 implants USP",
+    r:{
+      empathetic:{h:"Encourage smart comparison",s:"Absolutely — and I would always encourage you to compare. When you are doing that, the key things to look at are the implant brand being used, the dentist experience, what is included in the price, and aftercare. At Synergy we use Straumann implants exclusively — the number one rated implant brand in the world, made in Switzerland, with a 5-year biological warranty. Our surgeons have collectively placed over 20,000 implants.",k:"Lead with Straumann and 20000 implants — hard to match",f:"When you compare, are you mainly focused on price or is the quality of the implant brand important to you?"},
+      practical:{h:"What sets Synergy apart",s:"Of course, please do compare. We use only Straumann implants — the world's top-rated brand. Our all-inclusive package at £2,750 covers literally everything — scans, implant, crown, extractions, bone grafting if needed. No surprises. We have 17 clinics across the North West so there is always one near you. And our finance through Tabeo and Snap is some of the most flexible available.",k:"All-inclusive transparent pricing is a major differentiator",f:"Have you had consultations elsewhere yet or are we your first call?"},
+      urgency:{h:"Secure the free consultation",s:"Completely fair — shop around by all means. One thing worth knowing is our Spring Sale has limited availability and our diary fills fast. I would suggest booking your free consultation today — zero obligation — so Synergy is in the mix as you compare. If you find a better like-for-like package elsewhere we will respect that.",k:"Secure the appointment before they commit to a competitor",f:"Can I book your free consultation today so we can show you exactly what is included?"}
+    }
+  },
+  pain:{
+    kw:["hurt","pain","painful","sore","heal","recovery","needle","injection","drill","ache"],
+    type:"Pain Concern",urgency:"High",score:65,tag:"Hot",desc:"Pain concern — high intent",note:"Pain concern raised — emphasise pain-free technique and Straumann quality",
+    r:{
+      empathetic:{h:"Reassure completely",s:"That is one of the most common things we hear and I genuinely love being able to put people's minds at ease. The procedure is carried out under local anaesthetic so you feel absolutely nothing during it. Afterwards most of our patients are genuinely surprised — the discomfort is usually less than having a tooth out and typically settles within a few days.",k:"Compare to familiar reference — tooth extraction felt worse",f:"Have you had a tooth out before? The vast majority of our patients say the implant was easier than that."},
+      practical:{h:"Walk through the day",s:"Let me walk you through it. Before we start you will be fully numbed — you will feel pressure but no pain at all. The implant placement takes about an hour. You go home the same day. We use Straumann implants which are precision-engineered for minimal trauma, and we provide full aftercare instructions plus a direct line to our clinical team. Most people are back to normal within 2 to 3 days.",k:"Step by step transparency removes the unknown",f:"Would it help to hear from one of our patients who has already been through the process?"},
+      urgency:{h:"Modern dentistry no pain",s:"Dentistry has genuinely transformed. We use computer-controlled anaesthesia and the latest minimally invasive techniques with our Straumann implants. Patients often tell us they were amazed by how straightforward it was. Do not let a fear of pain stop you from getting this sorted. Book your free consultation this week — the dentist will walk you through everything in person.",k:"Technology proof plus Straumann quality neutralises fear",f:"Would you like to book a free consultation where the dentist can show you exactly what is involved?"}
+    }
+  },
+  invisalign:{
+    kw:["invisalign","aligners","straight","straighten","braces","crooked","clear aligner"],
+    type:"Invisalign Enquiry",urgency:"High",score:70,tag:"Hot",desc:"Invisalign interest — high intent",note:"Invisalign enquiry — lead with top North West provider status",
+    r:{
+      empathetic:{h:"Top provider in the North West",s:"Great news — you have called the right place. Synergy Dental is officially the highest provider of Invisalign in the entire North West of England. Our packages start from just £2,000 for our Express package and we offer finance through Tabeo over up to 60 months — that works out to around £34 a month. I would love to get you booked in for a free consultation.",k:"Highest NW provider is a powerful credibility anchor",f:"Have you had any previous consultations about straightening your teeth?"},
+      practical:{h:"Package breakdown",s:"Our Invisalign packages start from £2,000 for Express up to £4,250 for Comprehensive — all prices include retainers. The right package depends on the complexity of your case which is why the free consultation is so valuable. As the North West's highest Invisalign provider our team has more experience with Invisalign than any other practice in the region.",k:"Specific pricing plus highest provider status builds confidence",f:"How much movement do you think your teeth need — minor tweaks or more significant straightening?"},
+      urgency:{h:"Spring Sale on now",s:"Perfect timing — our Spring Sale is running right now with limited availability. Invisalign from £2,000 with 0% finance available. As the North West's top Invisalign provider we do get very busy especially during promotions. Can I book your free consultation this week while we still have slots? You are under zero commitment.",k:"Sale urgency plus top provider drives action",f:"Which of our 17 locations would be most convenient for your free consultation?"}
+    }
+  },
+  default:{
+    type:"General Enquiry",urgency:"Medium",score:50,tag:"Warm",desc:"General interest",note:"General enquiry — identify treatment and qualify",
+    r:{
+      empathetic:{h:"Understand their situation",s:"Thank you for getting in touch. Synergy has 17 clinics across the North West and we cover everything from implants and Invisalign to veneers, whitening and facial aesthetics. Every patient is different which is why we start with a free no-obligation consultation. Can I ask what has brought you to us today?",k:"Position as full-service experts not just one treatment",f:"What treatment were you looking into or are you just exploring your options?"},
+      practical:{h:"Find the right treatment",s:"To make sure I give you the right information, can I ask what treatment you are interested in? We cover implants from £2,750, Invisalign from £2,000, composite veneers from £1,950, and teeth whitening from £495 — all with flexible finance through Tabeo and Snap. Which area were you looking at?",k:"Lead with prices to qualify intent and budget quickly",f:"Which treatment is most relevant to you right now?"},
+      urgency:{h:"Free consultation this week",s:"The best next step is our free no-obligation consultation — completely free, about 20 minutes at your nearest Synergy clinic. You will get a full assessment and personalised treatment plan with exact costs. We have a Spring Sale running right now so it is a great time to get booked in. Shall I get you booked in this week?",k:"Convert every enquiry to a free consultation booking",f:"Which of our 17 locations would be most convenient for you?"}
+    }
+  }
+};
+
+// TIMER
+setInterval(()=>{if(started){secs++;const m=String(Math.floor(secs/60)).padStart(2,"0"),s=String(secs%60).padStart(2,"0");document.getElementById("clk").textContent=m+":"+s}},1000);
+
+// LOGIN
+function doLogin(){
+  const u=document.getElementById("lu").value.trim().toLowerCase();
+  const p=document.getElementById("lp").value.trim();
+  const btn=document.getElementById("lbtn");
+  document.getElementById("lerr").classList.remove("show");
+  btn.disabled=true;btn.textContent="Signing in...";
+  setTimeout(function(){
+    var client=CLIENTS[u];
+    if(client&&client.password===p){
+      sessionStorage.setItem("du",u);sessionStorage.setItem("dn",client.name);
+      document.getElementById("pbadge").textContent=client.name;
+      document.getElementById("ls").style.display="none";
+      document.getElementById("app").classList.add("show");
+      DG_KEY="622b75a42e7eb2d7c066d04d6ddeb82a07e0c90a";
+    } else {
+      document.getElementById("lerr").classList.add("show");
+      btn.disabled=false;btn.textContent="Sign In";
+    }
+  },500);
+}
+
+function doLogout(){
+  sessionStorage.clear();stopMic();
+  document.getElementById("ls").style.display="flex";
+  document.getElementById("app").classList.remove("show");
+  document.getElementById("lu").value="";
+  document.getElementById("lp").value="";
+  document.getElementById("lerr").classList.remove("show");
+  document.getElementById("lbtn").disabled=false;
+  document.getElementById("lbtn").textContent="Sign In";
+}
+
+window.onload=function(){
+  var u=sessionStorage.getItem("du"),n=sessionStorage.getItem("dn");
+  if(u&&CLIENTS[u]){
+    document.getElementById("pbadge").textContent=n;
+    document.getElementById("ls").style.display="none";
+    document.getElementById("app").classList.add("show");
+    DG_KEY="622b75a42e7eb2d7c066d04d6ddeb82a07e0c90a";
+  }
+  initChips();
+};
+
+document.addEventListener("keydown",function(e){
+  if(document.getElementById("ls").style.display!=="none"&&e.key==="Enter")doLogin();
+});
+
+// SETTINGS
+function openCfg(){document.getElementById("dgk").value=DG_KEY;document.getElementById("cfg").classList.add("show");}
+function closeCfg(){document.getElementById("cfg").classList.remove("show");}
+function saveCfg(){
+  var u=sessionStorage.getItem("du")||"x";
+  DG_KEY=document.getElementById("dgk").value.trim();
+  localStorage.setItem("dgk_"+u,DG_KEY);
+  closeCfg();
+  addMsg("sys","Settings saved. Click Start Listening to activate the microphone.");
+}
+
+// CHIPS
+function initChips(){
+  var el=document.getElementById("cr");el.innerHTML="";
+  CHIPS.forEach(function(o){
+    var c=document.createElement("div");c.className="chip";c.textContent=o.l;
+    c.onclick=function(){
+      document.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");});
+      c.classList.add("on");
+      document.getElementById("inp").value=o.ex;
+      go();
+    };
+    el.appendChild(c);
+  });
+}
+
+// MESSAGES
+function addMsg(role,text){
+  var el=document.getElementById("ts");
+  var labels={patient:"LEAD",rep:"REP",sys:"SYS"};
+  var time=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  var d=document.createElement("div");d.className="msg "+role;
+  d.innerHTML="<div class=\"ml\">"+labels[role]+"</div><div style=\"flex:1\"><div style=\"font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--t3);margin-bottom:2px\">"+time+"</div><div class=\"mt\">"+text+"</div></div>";
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+
+// SCORE
+function setScore(data){
+  var se=document.getElementById("qs"),fe=document.getElementById("qf");
+  se.textContent=data.score+"%";
+  document.getElementById("qd").textContent=data.desc;
+  document.getElementById("qt").textContent=data.tag;
+  fe.style.width=data.score+"%";
+  var cls=data.score>=65?"hi":data.score>=40?"mid":"lo";
+  se.className="qs "+cls;fe.className="qf f"+cls;
+  document.getElementById("oc").textContent=oc;
+  document.getElementById("hc").textContent=hc;
+}
+
+// CARDS
+function cycleCard(){_ci=(_ci+1)%3;showCard();}
+function showCard(){
+  var c=document.getElementById("si");c.innerHTML="";
+  var tone=TONES[_ci];var r=_cd.r[tone.k];if(!r)return;
+  var card=document.createElement("div");card.className="card";
+  card.innerHTML="<div class=\"ch2\"><div class=\"ct "+tone.cls+'">'+tone.lbl+"</div><div class=\"ctit\">"+r.h+"</div><button class=\"cpy\" onclick=\"event.stopPropagation();doCopy(this)\">Copy</button></div><div class=\"cb2\">"+r.s+"<div class=\"ck2\">KEY: "+r.k+"</div><div class=\"cf2\">ASK: "+r.f+"</div></div>";
+  card.dataset.script=r.s;
+  card.onclick=function(){if(card.classList.contains("used"))return;card.classList.add("used");addMsg("rep",r.s);hc++;document.getElementById("hc").textContent=hc;};
+  c.appendChild(card);
+  var nav=document.createElement("div");nav.style.cssText="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-top:1px solid var(--bdr)";
+  nav.innerHTML="<span style=\"font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--t3)\"><span style=\"color:var(--amber)\">TYPE:</span> "+_cd.type+"</span><button onclick=\"cycleCard()\" style=\"font-size:9px;padding:3px 10px;border-radius:20px;border:1px solid var(--bdr2);background:var(--bg3);color:var(--t2);cursor:pointer;font-family:'IBM Plex Mono',monospace\">Different angle &#8594;</button>";
+  c.appendChild(nav);
+}
+function renderCards(data){_cd=data;_ci=0;showCard();}
+function doCopy(btn){
+  var card=btn.closest(".card");var text=card.dataset.script||"";
+  navigator.clipboard.writeText(text).then(function(){btn.textContent="Copied!";btn.style.color="var(--teal)";setTimeout(function(){btn.textContent="Copy";btn.style.color="";},1500);}).catch(function(){});
+}
+
+// NOTES
+function addNote(text){
+  var el=document.getElementById("nc");
+  if(notes.length===0)el.innerHTML="";notes.push(text);
+  var line=document.createElement("div");line.className="nl";
+  var t=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  line.innerHTML="<span style=\"color:var(--t3);min-width:34px\">"+t+"</span> "+text;
+  el.appendChild(line);el.scrollTop=el.scrollHeight;
+}
+
+// DETECT
+
+// ── LIVE AI ───────────────────────────────────────────────────────
+var _aiHist = [];
+
+var _aiSys = "You are an elite dental sales coach for Synergy Dental, a 17-location UK dental group. A sales rep is on a live call with a prospect. Analyse what the prospect just said and respond with ONLY valid JSON — no markdown, no explanation." +
+"\n\nSynergy prices: Single implant £2750 all-inclusive (Straumann brand, 5yr warranty, 20000+ placed), Invisalign from £2000 (North West top provider), Composite veneers from £1950, Whitening £495. Finance: Tabeo and Snap Finance up to 60 months, implant = £46/month. Spring Sale running now. 17 locations across North West. Free consultation always available." +
+"\n\nReturn this exact JSON structure:" +
+"\n{" +
+"\n  \"objection_type\": \"Price Concern | Decision Delay | Dental Anxiety | Third Party Approval | Finance Query | Shopping Around | Pain Concern | Invisalign Enquiry | General Enquiry\"," +
+"\n  \"urgency\": \"Low | Medium | High\"," +
+"\n  \"score\": 0-100," +
+"\n  \"tag\": \"Cold | Warm | Hot | Very Hot\"," +
+"\n  \"desc\": \"6 words max\"," +
+"\n  \"note\": \"12 words max for call log\"," +
+"\n  \"responses\": {" +
+"\n    \"empathetic\": { \"headline\": \"3-5 words\", \"script\": \"2-3 sentences the rep says out loud\", \"key_point\": \"8 words\", \"follow_up\": \"one question to ask\" }," +
+"\n    \"practical\": { \"headline\": \"3-5 words\", \"script\": \"2-3 sentences\", \"key_point\": \"8 words\", \"follow_up\": \"one question\" }," +
+"\n    \"urgency\": { \"headline\": \"3-5 words\", \"script\": \"2-3 sentences\", \"key_point\": \"8 words\", \"follow_up\": \"one question\" }" +
+"\n  }" +
+"\n}";
+
+async function callAI(text){
+  document.getElementById("typ").classList.add("show");
+  document.getElementById("si").innerHTML = '<div class="empty">AI is generating a response...</div>';
+
+  _aiHist.push({role:"user", content: text});
+
+  try {
+    var res = await fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: _aiSys,
+        messages: _aiHist
+      })
+    });
+
+    var data = await res.json();
+    var raw = data.content && data.content[0] ? data.content[0].text : "{}";
+    var parsed = JSON.parse(raw.replace(/```json|```/g,"").trim());
+
+    _aiHist.push({role:"assistant", content: raw});
+
+    document.getElementById("typ").classList.remove("show");
+
+    // Map to format renderCards expects
+    var mapped = {
+      type: parsed.objection_type || "General Enquiry",
+      urgency: parsed.urgency || "Medium",
+      score: parsed.score || 50,
+      tag: parsed.tag || "Warm",
+      desc: parsed.desc || "General interest",
+      note: parsed.note || "",
+      responses: {
+        empathetic: parsed.responses && parsed.responses.empathetic ? {
+          headline: parsed.responses.empathetic.headline,
+          script: parsed.responses.empathetic.script,
+          key_point: parsed.responses.empathetic.key_point,
+          follow_up: parsed.responses.empathetic.follow_up
+        } : null,
+        practical: parsed.responses && parsed.responses.practical ? {
+          headline: parsed.responses.practical.headline,
+          script: parsed.responses.practical.script,
+          key_point: parsed.responses.practical.key_point,
+          follow_up: parsed.responses.practical.follow_up
+        } : null,
+        urgency: parsed.responses && parsed.responses.urgency ? {
+          headline: parsed.responses.urgency.headline,
+          script: parsed.responses.urgency.script,
+          key_point: parsed.responses.urgency.key_point,
+          follow_up: parsed.responses.urgency.follow_up
+        } : null
+      }
+    };
+
+    setScore(mapped);
+    renderCards(mapped);
+    if(mapped.note) addNote(mapped.note);
+    saveRpt(mapped);
+
+  } catch(err) {
+    document.getElementById("typ").classList.remove("show");
+    console.error("AI error:", err);
+    // Fallback to library
+    var fallback = detect(text);
+    setScore(fallback);
+    renderCards(fallback);
+    if(fallback.note) addNote(fallback.note);
+    saveRpt(fallback);
+    addMsg("sys", "AI response used built-in scripts (connection issue). Response still valid.");
+  }
+}
+
+
+function detect(text){
+  var t=text.toLowerCase();
+  for(var key in LIB){
+    if(key==="default")continue;
+    var data=LIB[key];
+    if(data.kw&&data.kw.some(function(k){return t.indexOf(k)>=0;}))return data;
+  }
+  return LIB.default;
+}
+
+// REPORTS STORAGE
+function getRptKey(){return "rpt_"+(sessionStorage.getItem("du")||"x");}
+function saveRpt(data){
+  var key=getRptKey();var rpts=[];
+  try{rpts=JSON.parse(localStorage.getItem(key)||"[]");}catch(e){}
+  rpts.push({ts:Date.now(),date:new Date().toLocaleDateString("en-GB"),time:new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}),type:data.type||"General",score:data.score||0,tag:data.tag||"Warm",note:data.note||""});
+  if(rpts.length>500)rpts=rpts.slice(-500);
+  localStorage.setItem(key,JSON.stringify(rpts));
+}
+function getRpts(){try{return JSON.parse(localStorage.getItem(getRptKey())||"[]");}catch(e){return[];}}
+
+// GO
+function go(){
+  var inp=document.getElementById("inp");var text=inp.value.trim();if(!text)return;
+  if(!started)started=true;inp.value="";
+  addMsg("patient",text);oc++;
+  document.getElementById("end-call-btn").style.display="flex";
+  document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
+  callAI(text);
+}
+
+function goText(text){
+  if(!started)started=true;addMsg("patient",text);oc++;
+  document.getElementById("end-call-btn").style.display="flex";
+  callAI(text);
+}
+
+// MIC
+async function toggleMic(){
+  if(micActive){stopMic();return;}
+  
+  try{
+    var stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    dgSocket=new WebSocket("wss://api.deepgram.com/v1/listen?model=nova-2&language=en-GB&interim_results=true&smart_format=true&endpointing=800",["token",DG_KEY]);
+    dgSocket.onopen=function(){
+      micActive=true;
+      document.getElementById("micbtn").className="tbtn on";
+      document.getElementById("mlbl").textContent="🔴 Listening...";
+      document.getElementById("ltg").textContent="● Live";document.getElementById("ltg").className="ltg on";
+      addMsg("sys","Microphone active — AI will analyse prospect speech automatically.");
+      mediaRecorder=new MediaRecorder(stream,{mimeType:"audio/webm"});
+      mediaRecorder.ondataavailable=function(e){if(dgSocket.readyState===1&&e.data.size>0)dgSocket.send(e.data);};
+      mediaRecorder.start(250);
+    };
+    dgSocket.onmessage=function(e){
+      var d=JSON.parse(e.data);
+      var transcript=d.channel&&d.channel.alternatives&&d.channel.alternatives[0]?d.channel.alternatives[0].transcript:"";
+      var isFinal=d.is_final;if(!transcript)return;
+      var itm=document.getElementById("itm");
+      if(isFinal){itm.classList.remove("show");itm.textContent="";if(transcript.trim().length>8)goText(transcript.trim());}
+      else{itm.textContent="🎤 "+transcript;itm.classList.add("show");}
+    };
+    dgSocket.onclose=function(){cleanupMic();};
+    dgSocket.onerror=function(){addMsg("sys","Deepgram connection error. Check your API key in Settings.");cleanupMic();};
+  }catch(err){addMsg("sys","Microphone error: "+err.message);}
+}
+function stopMic(){if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();if(dgSocket)dgSocket.close();cleanupMic();}
+function cleanupMic(){
+  micActive=false;mediaRecorder=null;dgSocket=null;
+  document.getElementById("micbtn").className="tbtn";document.getElementById("mlbl").textContent="🎤 Start Listening";
+  document.getElementById("ltg").textContent="● Mic off";document.getElementById("ltg").className="ltg";
+  document.getElementById("itm").classList.remove("show");document.getElementById("itm").textContent="";
+}
+
+// RESET
+function rst(){
+  if(!confirm("Reset this session?"))return;stopMic();
+  document.getElementById("ts").innerHTML="<div class=\"msg sys\"><div class=\"ml\">SYS</div><div class=\"mt\">New session started. Ready for next call.</div></div>";
+  document.getElementById("si").innerHTML="<div class=\"empty\">Suggestions appear here when a prospect raises an objection.</div>";
+  document.getElementById("nc").innerHTML="<span style=\"color:var(--t3)\">Notes auto-generate as the call progresses...</span>";
+  oc=0;hc=0;started=false;secs=0;notes=[];
+  document.getElementById("clk").textContent="00:00";
+  document.getElementById("qs").textContent="--";document.getElementById("qf").style.width="0%";
+  document.getElementById("qd").textContent="Awaiting first interaction";document.getElementById("qt").textContent="--";
+  document.getElementById("oc").textContent="0";document.getElementById("hc").textContent="0";
+  document.getElementById("end-call-btn").style.display="none";
+  _cd=null;_ci=0;
+}
+
+document.getElementById("inp").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();go();}});
+
+// REPORTS
+function openRpt(){renderRpt();document.getElementById("rpt").classList.add("show");}
+function closeRpt(){document.getElementById("rpt").classList.remove("show");}
+function clearRpt(){if(!confirm("Clear all report data?"))return;localStorage.removeItem(getRptKey());renderRpt();}
+
+function renderRpt(){
+  var rpts=getRpts();
+  var name=sessionStorage.getItem("dn")||"Practice";
+  document.getElementById("rpt-sub").textContent=name+" · "+rpts.length+" calls recorded";
+
+  var total=rpts.length;
+  var avg=total?Math.round(rpts.reduce(function(a,b){return a+(b.score||0);},0)/total):0;
+  var hot=rpts.filter(function(r){return r.tag==="Hot"||r.tag==="Very Hot";}).length;
+  var today=new Date().toLocaleDateString("en-GB");
+  var todayN=rpts.filter(function(r){return r.date===today;}).length;
+  var sc=avg>=65?"var(--green)":avg>=40?"var(--amber)":"var(--red)";
+
+  document.getElementById("rstats").innerHTML=
+    "<div class=\"rstat\"><div class=\"rsval\" style=\"color:var(--teal)\">"+total+"</div><div class=\"rslbl\">Total Calls</div><div class=\"rssub\">"+todayN+" today</div></div>"+
+    "<div class=\"rstat\"><div class=\"rsval\" style=\"color:"+sc+"\">"+avg+"%</div><div class=\"rslbl\">Avg Conversion</div><div class=\"rssub\">across all calls</div></div>"+
+    "<div class=\"rstat\"><div class=\"rsval\" style=\"color:var(--green)\">"+hot+"</div><div class=\"rslbl\">Hot Leads</div><div class=\"rssub\">"+(total?Math.round(hot/total*100):0)+"% of total</div></div>"+
+    "<div class=\"rstat\"><div class=\"rsval\" style=\"color:var(--purple)\">"+rpts.filter(function(r){return r.score>=65;}).length+"</div><div class=\"rslbl\">High Probability</div><div class=\"rssub\">score 65%+</div></div>";
+
+  var objC={};rpts.forEach(function(r){var t=r.type||"General";objC[t]=(objC[t]||0)+1;});
+  var objS=Object.entries(objC).sort(function(a,b){return b[1]-a[1];});
+  var maxO=objS.length?objS[0][1]:1;
+  var cols=["var(--teal)","var(--purple)","var(--amber)","var(--green)","var(--red)"];
+  document.getElementById("robj").innerHTML=objS.length?objS.map(function(x,i){return "<div class=\"brow\"><div class=\"blbl\">"+x[0]+"</div><div class=\"btrk\"><div class=\"bfill\" style=\"width:"+Math.round(x[1]/maxO*100)+"%;background:"+cols[i%cols.length]+"\"></div></div><div class=\"bcnt\">"+x[1]+"</div></div>";}).join(""):"<div style=\"font-size:11px;color:var(--t3);padding:8px 0\">No data yet</div>";
+
+  var days=[];for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push({date:d.toLocaleDateString("en-GB"),lbl:d.toLocaleDateString("en-GB",{weekday:"short"})});}
+  var dc=days.map(function(d){return{lbl:d.lbl,n:rpts.filter(function(r){return r.date===d.date;}).length};});
+  var mx=Math.max.apply(null,dc.map(function(d){return d.n;}).concat([1]));
+  document.getElementById("rdays").innerHTML="<div class=\"daywrap\">"+dc.map(function(d){return "<div class=\"daycol\"><div class=\"dayval\">"+( d.n||"")+"</div><div style=\"flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center\"><div class=\"daybar\" style=\"height:"+Math.max(d.n/mx*60,d.n>0?4:2)+"px;opacity:"+(d.n>0?0.9:0.2)+"\"></div></div><div class=\"daylbl\">"+d.lbl+"</div></div>";}).join("")+"</div>";
+
+  var recent=rpts.slice().reverse().slice(0,20);
+  document.getElementById("rcalls").innerHTML=recent.length?recent.map(function(r){var sc=r.score>=65?"var(--green)":r.score>=40?"var(--amber)":"var(--red)";return "<div class=\"crow\"><div class=\"ctime\">"+r.date+" "+r.time+"</div><div class=\"ctype\">"+r.type+"</div><div class=\"cnote\">"+(r.note||"—")+"</div><div class=\"cscore\" style=\"color:"+sc+"\">"+r.score+"%</div></div>";}).join(""):"<div style=\"font-size:11px;color:var(--t3);padding:10px 0\">No calls recorded yet. Start a session to track data.</div>";
+}
+
+// SMS
+function smsBuild(name){
+  if(!_cd) return "";
+  var n=(name&&name.trim())?name.trim():"there";
+  var type=_cd.type||"General Enquiry";
+  var cta="\n\nBook your FREE consultation:\nhttps://synergy-dental-group.dentr.net";
+  var sign="\n\nSynergy Dental";
+  var body;
+  if(type==="Price Concern") body="Hi "+n+", great speaking today! Just to follow up — a single implant works out to just £46/month on our 60-month Tabeo Finance plan. All-inclusive, no hidden fees. Our Spring Sale is still running with limited slots."+cta+sign;
+  else if(type==="Decision Delay") body="Hi "+n+", lovely speaking today! Whenever you are ready, your FREE consultation is available at any of our 17 North West locations — no commitment, no pressure. Spring Sale running now."+cta+sign;
+  else if(type==="Third Party Approval") body="Hi "+n+", great chatting today! We can arrange a FREE joint consultation for you and your partner — no pressure at all. Spring Sale running now with 0% finance available."+cta+sign;
+  else if(type==="Dental Anxiety") body="Hi "+n+", really appreciate you speaking with us today. Our team specialise in nervous patients and we go entirely at your pace. Your FREE consultation is there whenever you feel ready."+cta+sign;
+  else if(type==="Finance Query") body="Hi "+n+", great speaking today! As discussed — Tabeo and Snap Finance let you spread costs over up to 60 months. Single implant from just £46/month. Spring Sale running now."+cta+sign;
+  else if(type==="Shopping Around") body="Hi "+n+", thanks for considering Synergy! We use Straumann implants exclusively — world's number 1 brand — and our surgeons have placed over 20,000 implants. All-inclusive pricing, no surprises. Spring Sale running now."+cta+sign;
+  else if(type==="Pain Concern") body="Hi "+n+", lovely speaking today! Just to reassure you — most patients say it was far easier than expected. Pain-free anaesthesia and back to normal within days."+cta+sign;
+  else if(type==="Invisalign Enquiry") body="Hi "+n+", as the North West's number 1 Invisalign provider, Invisalign starts from just £2,000 with 0% finance available. Spring Sale running now."+cta+sign;
+  else body="Hi "+n+", great speaking today! FREE consultations available at all 17 of our North West locations. Spring Sale running now with 0% finance available."+cta+sign;
+  return body;
+}
+function smsUpdate(n){var m=smsBuild(n);document.getElementById("sms-prev").textContent=m;document.getElementById("sms-ch").textContent=m.length;}
+function smsOpen(){
+  if(!_cd){addMsg("sys","Handle an objection first before generating an SMS.");return;}
+  document.getElementById("sms-ni").value="";
+  var m=smsBuild("");
+  document.getElementById("sms-prev").textContent=m;
+  document.getElementById("sms-ch").textContent=m.length;
+  var tgs=[_cd.type,"Urgency: "+_cd.urgency,"Score: "+_cd.score+"%",_cd.tag];
+  document.getElementById("sms-tgs").innerHTML=tgs.map(function(t){return '<span class="stag">'+t+'</span>';}).join("");
+  document.getElementById("sms-cb").textContent="📋 Copy & Send";
+  document.getElementById("sms-cb").style.background="var(--green)";
+  document.getElementById("sms-ov").classList.add("show");
+  setTimeout(function(){document.getElementById("sms-ni").focus();},100);
+}
+function smsClose(){document.getElementById("sms-ov").classList.remove("show");}
+function smsCopy(){
+  var text=document.getElementById("sms-prev").textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    var btn=document.getElementById("sms-cb");
+    btn.textContent="Copied! Paste into your phone";btn.style.background="var(--teal)";
+    addMsg("sys","SMS copied — send it from your phone now.");
+    setTimeout(function(){btn.textContent="📋 Copy & Send";btn.style.background="var(--green)";smsClose();},2500);
+  }).catch(function(){alert("Copy failed — select the text manually.");});
+}
+function endCall(){
+  stopMic();
+  document.getElementById("end-call-btn").style.display="none";
+  addMsg("sys","Call ended. Generating follow-up SMS...");
+  setTimeout(smsOpen,400);
+}
+
+// TRAINING
+var TR=[
+  {id:"price",name:"Price Objection",icon:"💷",desc:"Too expensive",prospect:"Sarah",
+   open:"Hi, I've been looking into a dental implant but honestly the price is putting me off. It's just so expensive, I really wasn't expecting it to cost that much.",
+   p:{finance:["£46 a month actually doesn't sound too bad.","Oh right so I could spread the cost? That sounds more manageable.","I didn't realise you could spread it over that long."],value:["When you say all-inclusive what exactly does that cover?","The Straumann brand — is that really much better than others?","If it lasts 20 years I suppose it is better value."],urgency:["A Spring Sale? How long is that running for?","If I book a free consultation am I committing to anything?","Ok maybe I should just come in and have a chat."],def:["I'm still not sure, it's a lot of money.","Can I think about it more?","What happens if I can't keep up with payments?"]}},
+  {id:"anxiety",name:"Dental Anxiety",icon:"😰",desc:"Terrified of dentists",prospect:"James",
+   open:"I'll be honest with you, I'm absolutely terrified of the dentist. I had a really bad experience years ago and I've been avoiding it ever since.",
+   p:{empathy:["It's good to hear someone actually understands.","Most dentists just rush you. That's what I'm scared of.","I just don't want to feel out of control you know."],practical:["So I really wouldn't feel anything during the procedure?","What's conscious sedation exactly? Would I be asleep?","How long would the recovery actually be?"],reassure:["I suppose I could just come in for a chat without committing.","If I could bring someone with me that would help.","Ok maybe a free consultation wouldn't hurt."],def:["I'm still really nervous about it.","I just need more time to think.","What if I panic during the procedure?"]}},
+  {id:"delay",name:"Decision Delay",icon:"⏰",desc:"Keeps putting it off",prospect:"Michelle",
+   open:"I've actually been thinking about getting this done for a while but I just keep putting it off. I want to do more research first before I decide anything.",
+   p:{low:["A free consultation with no obligation sounds reasonable.","I suppose I could just come in to find out more.","17 locations — which one is closest to Bolton?"],urgency:["A Spring Sale? When does that end exactly?","You're saying if I wait it could become more complex?","I hadn't thought about it getting worse over time."],research:["What makes Synergy better than other practices?","Can I see some before and after photos?","20,000 implants placed — how do I know that's true?"],def:["I just need a bit more time.","I'll look at the website and get back to you.","Maybe next month would be better."]}},
+  {id:"consult",name:"Full Consultation",icon:"🦷",desc:"Full sales simulation",prospect:"David",
+   open:"Hi, I saw your advert about dental implants. I've got a missing tooth and I've been considering getting something done about it. Can you tell me more about what's involved?",
+   p:{info:["So how long does the whole process take from start to finish?","What brand of implants do you use and why does that matter?","Is there anything that could mean I'm not suitable?"],price:["And what's the total cost all in? Any hidden extras?","Do you offer any kind of payment plan or finance?","Is there any way to reduce the cost at all?"],next:["What would happen at the free consultation exactly?","How soon could I get an appointment?","Which location would you recommend for me?"],def:["That's helpful thank you.","Let me make sure I've understood that correctly.","I think I need to think about this."]}},
+  {id:"random",name:"Random Mixed",icon:"🎲",desc:"Surprise objections",prospect:"Emma",
+   open:"Hi, I saw your ad and I'm interested but I have quite a few questions and concerns before I'd consider booking anything.",
+   p:{a:["How much is this actually going to cost me?","I need to talk to my husband before agreeing to anything.","I'm also looking at a few other dental practices."],b:["I'm scared it's going to be painful.","How long have you been doing implants?","Can I see reviews from real patients?"],c:["What's the difference between you and NHS for this?","I'm not ready to book anything today.","Is there a discount if I refer a friend?"],def:["I need some time to think about all of this.","Can you send me something in writing?","What's your cancellation policy?"]}}
+];
+
+var trs={s:null,turn:0,reps:[],rec:null,listening:false};
+
+function openTraining(){document.getElementById("tr-ov").classList.add("show");trBuildList();}
+function trClose(){trStop();document.getElementById("tr-ov").classList.remove("show");}
+
+function trBuildList(){
+  var el=document.getElementById("tr-list");el.innerHTML="";
+  TR.forEach(function(s){
+    var d=document.createElement("div");
+    d.className="tr-sc"+(trs.s&&trs.s.id===s.id?" sel":"");
+    d.innerHTML='<div class="tr-sn">'+s.icon+" "+s.name+'</div><div class="tr-sd">'+s.desc+'</div>';
+    d.onclick=function(){trPick(s);};
+    el.appendChild(d);
+  });
+}
+
+function trPick(s){
+  trStop();trs.s=s;trs.turn=0;trs.reps=[];
+  trBuildList();
+  var cv=document.getElementById("tr-cv");cv.innerHTML="";
+  trMsg("sy","SYS","Scenario: "+s.name+" — Listen then click the mic to respond.");
+  document.getElementById("tr-mic").disabled=false;
+  document.getElementById("tr-eb").style.display="none";
+  document.getElementById("tr-st").textContent="Ready — prospect will speak first";
+  document.getElementById("tr-st").className="tr-st";
+  setTimeout(function(){trSpeak(s.open);},700);
+}
+
+function trMsg(role,lbl,text){
+  var cv=document.getElementById("tr-cv");
+  var d=document.createElement("div");d.className="tr-msg "+role;
+  d.innerHTML='<div class="tr-av">'+lbl+'</div><div class="tr-bu">'+text+'</div>';
+  cv.appendChild(d);cv.scrollTop=cv.scrollHeight;
+}
+
+var _trSelectedVoice = null;
+
+function trLoadVoices(){
+  var vs = window.speechSynthesis.getVoices();
+  if(!vs.length) return;
+  var sel = document.getElementById("tr-voice-sel");
+  if(!sel) return;
+  sel.innerHTML = "";
+  var english = vs.filter(function(v){ return v.lang.indexOf("en") >= 0; });
+  if(!english.length) english = vs;
+  english.forEach(function(v, i){
+    var opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = v.name + " (" + v.lang + ")";
+    // Pre-select first en-GB voice
+    if(!_trSelectedVoice && v.lang === "en-GB"){ opt.selected = true; _trSelectedVoice = v; }
+    sel.appendChild(opt);
+  });
+  if(!_trSelectedVoice && english.length){ _trSelectedVoice = english[0]; sel.selectedIndex = 0; }
+}
+
+function trSetVoice(idx){
+  var vs = window.speechSynthesis.getVoices();
+  var english = vs.filter(function(v){ return v.lang.indexOf("en") >= 0; });
+  if(!english.length) english = vs;
+  _trSelectedVoice = english[parseInt(idx)] || null;
+}
+
+function trSpeak(text){
+  trMsg("pr",trs.s?trs.s.prospect.substring(0,2).toUpperCase():"PR",text);
+  document.getElementById("tr-st").textContent=(trs.s?trs.s.prospect:"Prospect")+" is speaking...";
+  document.getElementById("tr-st").className="tr-st tk";
+  document.getElementById("tr-mic").disabled=true;
+  var utt=new SpeechSynthesisUtterance(text);
+  utt.lang="en-GB";utt.rate=0.93;utt.pitch=1.1;
+  if(_trSelectedVoice){ utt.voice=_trSelectedVoice; }
+  else {
+    var vs=window.speechSynthesis.getVoices();
+    var v=vs.find(function(x){return x.lang==="en-GB";})||vs.find(function(x){return x.lang.indexOf("en")>=0;});
+    if(v)utt.voice=v;
+  }
+  utt.onend=function(){
+    trs.turn++;
+    if(trs.turn>=6){
+      document.getElementById("tr-eb").style.display="inline-block";
+      document.getElementById("tr-st").textContent="Great session! Click End Call for your debrief.";
+      document.getElementById("tr-st").className="tr-st";
+      document.getElementById("tr-mic").disabled=true;
+    } else {
+      document.getElementById("tr-mic").disabled=false;
+      document.getElementById("tr-st").textContent="Your turn — click the mic and respond";
+      document.getElementById("tr-st").className="tr-st";
+      if(trs.turn>=2)document.getElementById("tr-eb").style.display="inline-block";
+    }
+  };
+  window.speechSynthesis.speak(utt);
+}
+
+function trMic(){
+  if(trs.listening){trStopMic();return;}
+  if(!("webkitSpeechRecognition" in window||"SpeechRecognition" in window)){
+    trMsg("sy","SYS","Speech recognition requires Chrome. Please open this in Chrome.");return;
+  }
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  trs.rec=new SR();trs.rec.lang="en-GB";trs.rec.continuous=false;trs.rec.interimResults=false;
+  trs.rec.onstart=function(){
+    trs.listening=true;
+    document.getElementById("tr-mic").className="tr-mic rec";
+    document.getElementById("tr-mic").textContent="🔴 Listening...";
+    document.getElementById("tr-st").textContent="Listening — speak your response now";
+    document.getElementById("tr-st").className="tr-st go";
+  };
+  trs.rec.onresult=function(e){
+    var text=e.results[0][0].transcript;
+    trs.reps.push(text);trMsg("rp","REP",text);trStopMic();
+    setTimeout(function(){trReply(text);},500);
+  };
+  trs.rec.onerror=function(e){
+    trStopMic();
+    if(e.error!=="no-speech")trMsg("sy","SYS","Mic error: "+e.error+". Try again.");
+    document.getElementById("tr-st").textContent="Mic error — try again";
+  };
+  trs.rec.onend=function(){trStopMic();};
+  trs.rec.start();
+}
+
+function trStopMic(){
+  trs.listening=false;
+  if(trs.rec){try{trs.rec.stop();}catch(e){}}
+  document.getElementById("tr-mic").className="tr-mic";
+  document.getElementById("tr-mic").textContent="🎤 Click to Speak";
+  document.getElementById("tr-mic").disabled=true;
+  document.getElementById("tr-st").textContent="Processing...";
+  document.getElementById("tr-st").className="tr-st";
+}
+
+function trReply(rt){
+  var s=trs.s;if(!s)return;
+  var t=rt.toLowerCase();var p=s.p;var pool=p.def;
+  if(s.id==="price"){
+    if(/month|finance|spread|46|tabeo/.test(t))pool=p.finance;
+    else if(/straumann|quality|include|all.in|last/.test(t))pool=p.value;
+    else if(/sale|offer|free|consultation/.test(t))pool=p.urgency;
+  } else if(s.id==="anxiety"){
+    if(/understand|feel|control|pace|rush|judge/.test(t))pool=p.empathy;
+    else if(/sedation|anaes|pain|numb|procedure/.test(t))pool=p.practical;
+    else if(/free|chat|consultation|bring/.test(t))pool=p.reassure;
+  } else if(s.id==="delay"){
+    if(/free|consultation|obligation|commit/.test(t))pool=p.low;
+    else if(/sale|worse|complex|bone|wait/.test(t))pool=p.urgency;
+    else if(/synergy|straumann|review|before|photo/.test(t))pool=p.research;
+  } else if(s.id==="consult"){
+    if(/straumann|brand|process|long|suitable/.test(t))pool=p.info;
+    else if(/cost|price|finance|pay|month/.test(t))pool=p.price;
+    else if(/consultation|appointment|book|next/.test(t))pool=p.next;
+  } else if(s.id==="random"){
+    var ks=["a","b","c"];pool=p[ks[trs.turn%3]]||p.def;
+  }
+  setTimeout(function(){trSpeak(pool[trs.reps.length%pool.length]);},300);
+}
+
+function trStop(){
+  trs.listening=false;
+  if(trs.rec){try{trs.rec.stop();}catch(e){}trs.rec=null;}
+  window.speechSynthesis.cancel();
+  document.getElementById("tr-mic").className="tr-mic";
+  document.getElementById("tr-mic").textContent="🎤 Click to Speak";
+  document.getElementById("tr-mic").disabled=true;
+}
+
+function trEnd(){trStop();trDebrief();}
+function trRetry(){dbClose();if(trs.s)trPick(trs.s);}
+function dbClose(){document.getElementById("db-ov").classList.remove("show");}
+
+function trDebrief(){
+  var reps=trs.reps;var s=trs.s;
+  if(!s||reps.length===0){trMsg("sy","SYS","Complete at least one exchange before ending.");return;}
+  var all=reps.join(" ").toLowerCase();
+  function sc(kws,max){return Math.min(Math.round((kws.filter(function(k){return all.indexOf(k)>=0;}).length/kws.length)*max),max);}
+  var cats=[
+    {n:"Empathy & Rapport",s:sc(["understand","feel","completely","appreciate","hear you","respect","worry"],10),m:10,t:"Use 'I completely understand' and 'I hear you' early in every response."},
+    {n:"Finance Handling",s:sc(["month","finance","tabeo","spread","46","manageable","0%"],10),m:10,t:"Always break it to monthly — £46/month lands far better than £2,750."},
+    {n:"Value & USPs",s:sc(["straumann","20,000","all-inclusive","warranty","north west","17"],10),m:10,t:"Lead with Straumann, 20,000 implants placed, and all-inclusive pricing."},
+    {n:"Urgency Creation",s:sc(["spring sale","offer","limited","this week","available","soon"],10),m:10,t:"Reference the Spring Sale and limited availability on every call."},
+    {n:"Closing Technique",s:sc(["consultation","book","appointment","free","next step","week","forward"],10),m:10,t:"Every call must end with a free consultation offer — no exceptions."}
+  ];
+  var total=cats.reduce(function(a,b){return a+b.s;},0);
+  var pct=Math.round((total/50)*100);
+  var col=pct>=70?"var(--green)":pct>=45?"var(--amber)":"var(--red)";
+  var vd=pct>=70?"Strong performance — ready for live calls":pct>=45?"Good foundation — a few areas to sharpen":"Needs more practice before live calls";
+  document.getElementById("db-rng").textContent=pct+"%";
+  document.getElementById("db-rng").style.borderColor=col;document.getElementById("db-rng").style.color=col;
+  document.getElementById("db-sub").textContent=s.name+" · "+reps.length+" responses analysed";
+  document.getElementById("db-vd").textContent=vd;
+  document.getElementById("db-cats").innerHTML=cats.map(function(c){
+    var p2=Math.round((c.s/c.m)*100);var cc=p2>=70?"var(--green)":p2>=45?"var(--amber)":"var(--red)";
+    return '<div class="db-cat"><div class="db-cr"><span class="db-cn">'+c.n+'</span><span class="db-cs" style="color:'+cc+'">'+c.s+"/"+c.m+'</span></div><div class="db-tr"><div class="db-fl" style="width:'+p2+'%;background:'+cc+'"></div></div>'+(c.s<7?'<div class="db-tp">💡 '+c.t+'</div>':'')+'</div>';
+  }).join("");
+  var weak=cats.filter(function(c){return c.s<7;});
+  document.getElementById("db-recs").innerHTML=weak.length?weak.map(function(c,i){return (i+1)+". "+c.t;}).join("<br>"):"Excellent across all areas. Keep referencing Synergy's unique selling points on every call.";
+  document.getElementById("db-ov").classList.add("show");
+}
+
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged=function(){
+    window.speechSynthesis.getVoices();
+    trLoadVoices();
+  };
+  // Try loading immediately in case voices already available
+  setTimeout(trLoadVoices, 500);
+}
+
+
+var BOOK = "https://synergy-dental-group.dentr.net";
+var REVIEW = "https://g.page/r/synergy-dental/review";
+
+function openWorkflows(){ document.getElementById("wf-ov").classList.add("show"); wfBuild(); }
+function closeWorkflows(){ document.getElementById("wf-ov").classList.remove("show"); }
+
+function wfSwitch(tab, secId){
+  document.querySelectorAll(".wf-tab").forEach(function(t){ t.classList.remove("sel"); });
+  document.querySelectorAll(".wf-sec").forEach(function(s){ s.classList.remove("show"); });
+  tab.classList.add("sel");
+  document.getElementById(secId).classList.add("show");
+}
+
+function wfV(id){ var el = document.getElementById(id); return el ? el.value.trim() : ""; }
+
+function wfBuild(){
+  var name = wfV("wfn") || "[Name]";
+  var phone = wfV("wfp");
+  var treat = wfV("wft") || "Dental Implant";
+  var loc = wfV("wfl") || "Bolton";
+  var appt = wfV("wfa") || "[Appointment Date and Time]";
+
+  var nl = "\n";
+
+  var fu = [
+    { day:"Day 1", cls:"teal", timing:"Send after 24 hours — no reply",
+      msg:"Hi " + name + ", it was great speaking with you today about " + treat + " at Synergy Dental " + loc + "!" + nl + nl + "I just wanted to follow up and see if you had any questions. Our Spring Sale is still running and we have free consultation slots available this week — no obligation at all." + nl + nl + "Book here: " + BOOK + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 2 · 12hr", cls:"amber", timing:"Send 12 hours later — still no reply",
+      msg:"Hi " + name + ", just making sure my last message came through okay!" + nl + nl + "I know " + treat + " is a big decision and I am happy to answer any questions — cost, process, what to expect. Completely no pressure." + nl + nl + "Spring Sale slots are filling fast at our " + loc + " clinic." + nl + nl + BOOK + nl + nl + "Synergy Dental" },
+    { day:"Day 3 · 24hr", cls:"teal", timing:"Send 24 hours later — still no reply",
+      msg:"Hi " + name + "! Before our Spring Sale ends I wanted to share something." + nl + nl + "A " + treat + " at Synergy works out to just £46 a month on our 60-month Tabeo Finance plan — less than most people spend on a weekly shop." + nl + nl + "Free consultation, no commitment:" + nl + BOOK + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 4 · 24hr", cls:"teal", timing:"Send 24 hours later — still no reply",
+      msg:"Hi " + name + ", keeping this brief!" + nl + nl + "We have a free consultation slot at our " + loc + " clinic I would love to hold for you. 20 minutes, no pressure, just a proper assessment so you have all the facts." + nl + nl + "Reply YES and I will book it in right now." + nl + nl + "Synergy Dental" },
+    { day:"Day 5 · 24hr", cls:"teal", timing:"Send 24 hours later — still no reply",
+      msg:"Hi " + name + ", did you know Synergy is the highest Invisalign provider in the North West and we have placed over 20,000 Straumann implants?" + nl + nl + "Our patients say we changed their confidence completely. Read their stories: https://synergydental.org.uk/patient-testimonials/" + nl + nl + "Free consultation still available at " + loc + ":" + nl + BOOK + nl + nl + "Synergy Dental" },
+    { day:"Day 6 · 24hr", cls:"amber", timing:"Send 24 hours later — still no reply",
+      msg:"Hi " + name + ", last message about the Spring Sale — it ends very soon and I would hate for you to miss the saving." + nl + nl + "If now is not the right time I completely understand. But if anything is holding you back — cost, nerves, timing — just reply and let me know. I am here to help." + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 7 · Final", cls:"red", timing:"Final message — 24 hours later",
+      msg:"Hi " + name + ", this is my last message — I promise!" + nl + nl + "Whenever you are ready to explore " + treat + " we are here. Your free consultation at our " + loc + " clinic has no expiry, no pressure." + nl + nl + BOOK + nl + nl + "Take care," + nl + "Synergy Dental " + loc }
+  ];
+
+  var cf = [
+    { day:"Confirmed", cls:"teal", timing:"Send immediately after booking",
+      msg:"Hi " + name + ", brilliant — your free consultation at Synergy Dental " + loc + " is confirmed!" + nl + nl + "Date and time: " + appt + nl + "Location: " + loc + " clinic" + nl + nl + "What to expect: a relaxed 20-minute chat with one of our specialists. No treatment on the day, just a proper assessment and personalised plan." + nl + nl + "See you soon!" + nl + "Synergy Dental " + loc },
+    { day:"48hr Reminder", cls:"teal", timing:"Send 48 hours before appointment",
+      msg:"Hi " + name + ", a friendly reminder that your free consultation at Synergy Dental " + loc + " is in 2 days!" + nl + nl + "Date and time: " + appt + nl + nl + "If you need to reschedule please let us know as soon as possible." + nl + nl + "Reply YES to confirm you are still coming" + nl + nl + "Synergy Dental " + loc },
+    { day:"12hr Reminder", cls:"amber", timing:"Send 12 hours before — reply required",
+      msg:"Hi " + name + ", your consultation at our " + loc + " clinic is tomorrow!" + nl + nl + "Date and time: " + appt + nl + nl + "A couple of things to know:" + nl + "- Free parking nearby" + nl + "- No treatment on the day — just a chat" + nl + "- Bring any X-rays or dental records if you have them" + nl + nl + "Please reply YES to confirm your slot" + nl + nl + "Synergy Dental" },
+    { day:"2hr · URGENT", cls:"red", timing:"Send 2 hours before — final confirmation",
+      msg:"Hi " + name + ", we are looking forward to seeing you in 2 hours!" + nl + nl + "Date and time: " + appt + nl + "Location: Synergy Dental " + loc + nl + nl + "If anything has come up and you cannot make it, please let us know now so we can fit someone else in." + nl + nl + "Otherwise — see you very soon!" + nl + "Synergy Dental " + loc }
+  ];
+
+  var ns = [
+    { day:"Same Day", cls:"red", timing:"Send same day as missed appointment",
+      msg:"Hi " + name + ", we had a free consultation booked for you today at Synergy Dental " + loc + " and we missed you!" + nl + nl + "Not to worry at all — these things happen. I would love to rebook you at a time that works better." + nl + nl + "Choose a new slot here:" + nl + BOOK + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 2 · 24hr", cls:"teal", timing:"Send 24 hours later — not rebooked",
+      msg:"Hi " + name + ", your free consultation at Synergy Dental " + loc + " is still available whenever you are ready. Just 20 minutes, no pressure, no commitment." + nl + nl + BOOK + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 3 · 24hr", cls:"teal", timing:"Send 24 hours later — not rebooked",
+      msg:"Hi " + name + ", just checking in — is everything okay? We noticed you were not able to make your consultation and want to make sure we can still help." + nl + nl + "If nerves or cost were a concern, I am happy to chat through any worries before you come in. Just reply to this message." + nl + nl + "Otherwise: " + BOOK + nl + nl + "Synergy Dental" },
+    { day:"Day 4 · 24hr", cls:"teal", timing:"Send 24 hours later — not rebooked",
+      msg:"Hi " + name + ", did you know we have 17 clinics across the North West? If " + loc + " was not the most convenient, we may have a location that works better." + nl + nl + "All consultations are free and take just 20 minutes. Pick your nearest clinic here:" + nl + BOOK + nl + nl + "Synergy Dental" },
+    { day:"Day 5 · 24hr", cls:"teal", timing:"Send 24 hours later — not rebooked",
+      msg:"Hi " + name + ", our Spring Sale is still running but will not last much longer. Your free consultation is still available and I would love to get you booked in before the offer ends." + nl + nl + BOOK + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 6 · 24hr", cls:"amber", timing:"Send 24 hours later — not rebooked",
+      msg:"Hi " + name + ", I know I have sent a few messages and I do not want to be a bother. I just genuinely believe we could help you and I would hate for cost or nerves to be the reason you miss out." + nl + nl + "If there is anything I can help with just reply. Otherwise:" + nl + BOOK + nl + nl + "Synergy Dental" },
+    { day:"Day 7 · Final", cls:"red", timing:"Final message — 24 hours later",
+      msg:"Hi " + name + ", this is my final message. Whenever you are ready to explore your options, your free consultation at Synergy Dental is always here — no expiry, no pressure." + nl + nl + BOOK + nl + nl + "Take care," + nl + "Synergy Dental " + loc }
+  ];
+
+  var pc = [
+    { day:"Day 1 · Today", cls:"teal", timing:"Send within 2 hours of consultation ending",
+      msg:"Hi " + name + ", it was brilliant meeting you today at Synergy Dental " + loc + "!" + nl + nl + "I hope you found the consultation helpful. Whenever you are ready to go ahead, just give us a call or book online:" + nl + BOOK + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 2 · 24hr", cls:"teal", timing:"Send 24 hours after consultation",
+      msg:"Hi " + name + ", just checking in after your consultation yesterday!" + nl + nl + "If you have any questions about the treatment plan or costs we discussed I am happy to help. Remember we offer 0% finance through Tabeo so the cost can be spread very comfortably." + nl + nl + "Synergy Dental " + loc },
+    { day:"Day 3 · 48hr", cls:"teal", timing:"Send 48 hours after consultation",
+      msg:"Hi " + name + ", I wanted to reach out one more time after your visit." + nl + nl + "If you are ready to go ahead we have availability at our " + loc + " clinic. The sooner we get started the sooner you will have the smile you deserve!" + nl + nl + BOOK + nl + nl + "Synergy Dental" },
+    { day:"Day 7 · Review", cls:"amber", timing:"Send 7 days after consultation — review and voucher",
+      msg:"Hi " + name + ", it has been a week since your consultation at Synergy Dental " + loc + " and we hope you are doing well!" + nl + nl + "We would really appreciate a Google review — it only takes 2 minutes and helps other patients find us:" + nl + REVIEW + nl + nl + "As a thank you we would like to offer you a £50 voucher off your next appointment. Just mention this message when you book and our team will honour it." + nl + nl + "Thank you so much — it really does mean the world to us." + nl + "Synergy Dental " + loc }
+  ];
+
+  wfRenderList("wffu-list", fu, phone);
+  wfRenderList("wfcf-list", cf, phone);
+  wfRenderList("wfns-list", ns, phone);
+  wfRenderList("wfpc-list", pc, phone);
+}
+
+function wfRenderList(elId, msgs, phone){
+  var el = document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML = "";
+  msgs.forEach(function(m){
+    var waNum = phone ? "44" + phone.replace(/^0/, "").replace(/\D/g, "") : "";
+    var waHref = waNum ? "https://wa.me/" + waNum + "?text=" + encodeURIComponent(m.msg) : "#";
+    var card = document.createElement("div");
+    card.className = "wf-card";
+    var hd = document.createElement("div"); hd.className = "wf-card-hd";
+    var dayEl = document.createElement("div"); dayEl.className = "wf-day " + m.cls; dayEl.textContent = m.day;
+    var timEl = document.createElement("div"); timEl.className = "wf-timing"; timEl.textContent = m.timing;
+    hd.appendChild(dayEl); hd.appendChild(timEl); card.appendChild(hd);
+    var body = document.createElement("div"); body.className = "wf-body-txt"; body.textContent = m.msg;
+    card.appendChild(body);
+    var ft = document.createElement("div"); ft.className = "wf-card-ft";
+    var wa = document.createElement("a"); wa.className = "wf-wa"; wa.href = waHref; wa.target = "_blank"; wa.textContent = "Open in WhatsApp";
+    var cpy = document.createElement("button"); cpy.className = "wf-cpy"; cpy.textContent = "Copy";
+    cpy.onclick = (function(msg){ return function(){ wfCopy(this, msg); }; })(m.msg);
+    ft.appendChild(wa); ft.appendChild(cpy); card.appendChild(ft);
+    el.appendChild(card);
+  });
+}
+
+function wfCopy(btn, text){
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent = "Copied!"; btn.style.color = "var(--teal)";
+    setTimeout(function(){ btn.textContent = "Copy"; btn.style.color = ""; }, 1500);
+  }).catch(function(){});
+}
+
+</script>
+
+<!-- SMS -->
+<div class="sms-ov" id="sms-ov">
+  <div class="sms-bx">
+    <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:4px">📱 Follow-up SMS</div>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:12px">Generated from this call. Enter name then copy and send from your phone.</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);white-space:nowrap">Name</span>
+      <input class="sms-ni" id="sms-ni" placeholder="e.g. Sarah" oninput="smsUpdate(this.value)"/>
+    </div>
+    <div style="margin-bottom:10px" id="sms-tgs"></div>
+    <div class="sms-prev" id="sms-prev"></div>
+    <div style="font-size:10px;color:var(--t3);font-family:'IBM Plex Mono',monospace;text-align:right;margin-bottom:12px"><span id="sms-ch">0</span> chars</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bp" id="sms-cb" onclick="smsCopy()" style="flex:1;background:var(--green)">📋 Copy &amp; Send</button>
+      <button class="btn bg2" onclick="smsClose()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINING -->
+<div class="tr-ov" id="tr-ov">
+  <div class="tr-tb">
+    <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800">ScriptWise <span style="color:var(--teal)">Training</span></div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);padding:2px 10px;border:1px solid var(--bdr2);border-radius:20px">Sales Simulator</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+      <span style="font-size:10px;color:var(--t3);font-family:'IBM Plex Mono',monospace">Prospect Voice:</span>
+      <select id="tr-voice-sel" onchange="trSetVoice(this.value)" style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--t1);outline:none;cursor:pointer;font-family:'IBM Plex Mono',monospace">
+        <option value="">Loading voices...</option>
+      </select>
+      <button onclick="trClose()" style="font-size:10px;color:var(--t3);background:none;border:1px solid var(--bdr);border-radius:6px;padding:4px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace">Exit</button>
+    </div>
+  </div>
+  <div class="tr-bd">
+    <div class="tr-sb">
+      <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:10px">Scenarios</div>
+      <div id="tr-list"></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bdr);font-size:11px;color:var(--t3);line-height:1.7">1. Pick scenario<br>2. Listen to prospect<br>3. Click mic and respond<br>4. End call for debrief</div>
+    </div>
+    <div class="tr-mn">
+      <div class="tr-cv" id="tr-cv">
+        <div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:10px;opacity:0.3">
+          <div style="font-size:36px">🎓</div>
+          <div style="font-size:13px;color:var(--t2);font-family:'IBM Plex Mono',monospace">Select a scenario to begin</div>
+        </div>
+      </div>
+      <div class="tr-ft">
+        <div class="tr-st" id="tr-st">Select a scenario from the left to start</div>
+        <button class="tr-mic" id="tr-mic" onclick="trMic()" disabled>🎤 Click to Speak</button>
+        <button class="tr-eb" id="tr-eb" onclick="trEnd()" style="display:none">End Call + Debrief</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DEBRIEF -->
+<div class="db-ov" id="db-ov">
+  <div class="db-bx">
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px">Training Debrief</div>
+      <div style="font-size:12px;color:var(--t3)" id="db-sub"></div>
+    </div>
+    <div class="db-rng" id="db-rng">0</div>
+    <div style="text-align:center;font-size:13px;color:var(--t2);margin-bottom:16px" id="db-vd"></div>
+    <div id="db-cats"></div>
+    <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:14px;margin-top:10px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:8px">Recommendations</div>
+      <div id="db-recs" style="font-size:12px;color:var(--t2);line-height:1.8"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn bp" onclick="trRetry()" style="flex:1">Try Again</button>
+      <button class="btn bg2" onclick="dbClose()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="wf-ov" id="wf-ov">
+  <div class="wf-tb">
+    <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800">ScriptWise <span style="color:var(--teal)">Workflows</span></div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--t3);padding:2px 10px;border:1px solid var(--bdr2);border-radius:20px">Patient Communication Sequences</div>
+    <button onclick="closeWorkflows()" style="margin-left:auto;font-size:10px;color:var(--t3);background:none;border:1px solid var(--bdr);border-radius:6px;padding:4px 12px;cursor:pointer;font-family:'IBM Plex Mono',monospace">Close</button>
+  </div>
+  <div class="wf-body">
+    <div class="wf-left">
+      <div style="font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:2px">Sequences</div>
+      <div class="wf-tab sel" onclick="wfSwitch(this,'wffu')"><div class="wf-tab-name">📅 Follow-up</div><div class="wf-tab-desc">7-day no reply</div></div>
+      <div class="wf-tab" onclick="wfSwitch(this,'wfcf')"><div class="wf-tab-name">✅ Confirmation</div><div class="wf-tab-desc">Appt reminders</div></div>
+      <div class="wf-tab" onclick="wfSwitch(this,'wfns')"><div class="wf-tab-name">❌ No-show</div><div class="wf-tab-desc">7-day re-engage</div></div>
+      <div class="wf-tab" onclick="wfSwitch(this,'wfpc')"><div class="wf-tab-name">⭐ Post-consult</div><div class="wf-tab-desc">Review + voucher</div></div>
+    </div>
+    <div class="wf-main">
+      <div class="wf-pcard">
+        <div class="wf-ptitle">Patient details — updates all messages automatically</div>
+        <div class="wf-grid">
+          <div class="wf-field"><div class="wf-lbl">First Name</div><input class="wf-inp" id="wfn" placeholder="e.g. Sarah" oninput="wfBuild()"/></div>
+          <div class="wf-field"><div class="wf-lbl">Phone (WhatsApp)</div><input class="wf-inp" id="wfp" placeholder="07700900000" oninput="wfBuild()"/></div>
+          <div class="wf-field"><div class="wf-lbl">Treatment</div>
+            <select class="wf-sel" id="wft" onchange="wfBuild()">
+              <option>Dental Implant</option><option>Invisalign</option><option>Composite Veneers</option>
+              <option>Teeth Whitening</option><option>Full Arch Implants</option><option>Porcelain Veneers</option><option>General Enquiry</option>
+            </select>
+          </div>
+          <div class="wf-field"><div class="wf-lbl">Location</div>
+            <select class="wf-sel" id="wfl" onchange="wfBuild()">
+              <option>Bolton</option><option>Preston</option><option>Birmingham</option><option>Blackburn</option>
+              <option>Blackpool</option><option>Burnley</option><option>Bury</option><option>Chorley</option>
+              <option>Farnworth</option><option>Haslingden</option><option>Leyland</option><option>Little Lever</option>
+              <option>Liverpool</option><option>Macclesfield</option><option>Oldham</option><option>Ormskirk</option>
+            </select>
+          </div>
+          <div class="wf-field full"><div class="wf-lbl">Appointment Date &amp; Time</div><input class="wf-inp" id="wfa" placeholder="e.g. Monday 14th April at 2:00pm" oninput="wfBuild()"/></div>
+        </div>
+      </div>
+      <div class="wf-sec show" id="wffu"><div class="wf-note">Send Message 1 if no reply within 24 hours of first contact. Follow the timing on each card. Stop the sequence the moment they respond or book.</div><div class="wf-seq-title">📅 7-Day Follow-up Sequence</div><div id="wffu-list"></div></div>
+      <div class="wf-sec" id="wfcf"><div class="wf-note">Send immediately after booking. The 12-hour and 2-hour reminders ask the patient to confirm — at least one reply is needed to confirm attendance.</div><div class="wf-seq-title">✅ Appointment Confirmation Sequence</div><div id="wfcf-list"></div></div>
+      <div class="wf-sec" id="wfns"><div class="wf-note">Send Message 1 the same day as the missed appointment. Then every 24 hours. Stop as soon as they rebook.</div><div class="wf-seq-title">❌ No-show Re-engagement — 7 Days</div><div id="wfns-list"></div></div>
+      <div class="wf-sec" id="wfpc"><div class="wf-note">Send Message 1 within 2 hours of the consultation ending. Day 7 message includes the Google review link and the 50 pound voucher offer.</div><div class="wf-seq-title">⭐ Post-consultation Follow-up</div><div id="wfpc-list"></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
