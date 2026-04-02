@@ -17,9 +17,23 @@ exports.handler = async function(event) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not set' }) };
   }
 
-  return new Promise((resolve) => {
-    const bodyData = event.body;
+  // Handle body - could be base64 encoded or plain string
+  let bodyData = event.body;
+  if (event.isBase64Encoded) {
+    bodyData = Buffer.from(bodyData, 'base64').toString('utf8');
+  }
+  if (!bodyData) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Empty request body' }) };
+  }
 
+  // Validate it's proper JSON
+  try {
+    JSON.parse(bodyData);
+  } catch(e) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON: ' + e.message }) };
+  }
+
+  return new Promise((resolve) => {
     const options = {
       hostname: 'api.anthropic.com',
       path: '/v1/messages',
@@ -36,20 +50,12 @@ exports.handler = async function(event) {
       let data = '';
       res.on('data', (chunk) => { data += chunk; });
       res.on('end', () => {
-        resolve({
-          statusCode: res.statusCode,
-          headers,
-          body: data
-        });
+        resolve({ statusCode: res.statusCode, headers, body: data });
       });
     });
 
     req.on('error', (err) => {
-      resolve({
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: err.message })
-      });
+      resolve({ statusCode: 500, headers, body: JSON.stringify({ error: err.message }) });
     });
 
     req.write(bodyData);
