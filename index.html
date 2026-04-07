@@ -695,13 +695,8 @@ async function callAI(text){
   } catch(err) {
     document.getElementById("typ").classList.remove("show");
     console.error("AI error:", err);
-    // Fallback to library
-    var fallback = detect(text);
-    setScore(fallback);
-    renderCards(fallback);
-    if(fallback.note) addNote(fallback.note);
-    saveRpt(fallback);
-    addMsg("sys", "AI response used built-in scripts (connection issue). Response still valid.");
+    document.getElementById("si").innerHTML = '<div class="empty" style="color:var(--red)">AI connection error: ' + err.message + '</div>';
+    addMsg("sys", "AI error: " + err.message);
   }
 }
 
