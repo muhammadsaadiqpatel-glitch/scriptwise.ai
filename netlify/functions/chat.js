@@ -1,6 +1,9 @@
 const https = require('https');
 
 exports.handler = async function(event) {
+console.log("Body received:", event.body);
+console.log("Body length:", event.body ? event.body.length : 0);
+console.log("Is base64:", event.isBase64Encoded);
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
